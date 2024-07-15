@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Music Kids</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .carousel img {
+            transition: opacity 1s;
+        }
+    </style>
+</head>
+<body class="bg-blue-100 flex items-center justify-center h-screen">
+    <div class="w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg flex">
+        <div class="w-1/2 p-8">
+            <h1 class="text-4xl text-orange-500 font-bold mb-8 text-center">Iniciar Sesión</h1>
+            <form action="" method="">
+                <div class="mb-6">
+                    <label for="email" class="block text-gray-700 font-bold mb-2">Correo Electrónico:</label>
+                    <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-700 font-bold mb-2">Contraseña:</label>
+                    <input type="password" id="password" name="password" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                </div>
+                <div class="flex items-center justify-between mb-6">
+                    <button type="submit" class="bg-yellow-300 text-white font-bold py-3 px-6 rounded-full hover:bg-orange-600 transition duration-300">
+                        Iniciar Sesión
+                    </button>
+                    <a href="register.html" class="text-blue-500 hover:underline">Crear cuenta</a>
+                </div>
+                
+            </form>
+        </div>
+        <div class="w-1/2 p-8 carousel relative overflow-hidden rounded-lg border border-gray-300">
+            <img src="/static/imagenes/registrarse1.png" alt="Imagen 1" class="absolute inset-0 w-full h-full object-cover opacity-100">
+            <img src="/static/imagenes/registrarse2.png" alt="Imagen 2" class="absolute inset-0 w-full h-full object-cover opacity-0">
+            <img src="/static/imagenes/registrarse3.png" alt="Imagen 3" class="absolute inset-0 w-full h-full object-cover opacity-0">
+        </div>
+    </div>
+    <script>
+        let index = 0;
+        const images = document.querySelectorAll('.carousel img');
+        setInterval(() => {
+            images[index].classList.remove('opacity-100');
+            images[index].classList.add('opacity-0');
+            index = (index + 1) % images.length;
+            images[index].classList.remove('opacity-0');
+            images[index].classList.add('opacity-100');
+        }, 3000);
+    </script>
+</body>
+</html>

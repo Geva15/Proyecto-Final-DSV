@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Kids</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+</head>
+<body class="bg-blue-100 text-center">
+    <header class="bg-white shadow-md p-4 flex items-center justify-between">
+        <div class="flex items-center">
+            <img src="/static//imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
+            <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
+        </div>
+        <button id="switchMode" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">Ver como Jugador</button>
+    </header>
+    <h1 class="text-4xl text-orange-500 mt-10">Administrar Página</h1>
+    <div class="container mx-auto flex flex-wrap justify-center mt-10">
+        <div class="m-4">
+            <a href="jugadores.html">
+                <img src="/static//imagenes/usuarios.png" alt="Imagen 2" class="w-64 h-64 object-cover rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <h2 class="text-lg text-gray-700 mt-2 font-bold font-serif">Jugadores</h2>
+            </a>
+        </div>
+        <div class="m-4">
+            <a href="administrativos.html">
+                <img src="/static//imagenes/admin.png" alt="Imagen 2" class="w-64 h-64 object-cover rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <h2 class="text-lg text-gray-700 mt-2 font-bold font-serif">Administrativos</h2>
+            </a>
+        </div>
+        <div class="m-4">
+            <a href="lista_canciones.html">
+                <img src="/static//imagenes/canciones.png" alt="Imagen 2" class="w-64 h-64 object-cover rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <h2 class="text-lg text-gray-700 mt-2 font-bold font-serif">Lista de canciones</h2>
+            </a>
+        </div>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>
