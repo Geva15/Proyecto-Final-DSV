@@ -5,33 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soporte y Ayuda - Music Kids</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .estrellita{
+            height: 50px;
+        }
+    </style>
 </head>
 <body class="bg-blue-100 text-center">
     <header class="bg-white shadow-md p-4 flex items-center justify-between fixed z-10 w-full">
         <div class="flex items-center">
             <img src="/static/imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
             <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
-            <a href="/home" class="ml-10 mr-2">
+            <a href="/user_home" class="ml-10 mr-2">
                 <img src="/static/imagenes/inicio.png" class="h-12 w-12" alt="">
             </a>
             <a href="" class="mx-2">
                 <img src="/static/imagenes/icono_tutorial.png" class="h-12 w-10" alt="">
             </a>
-            <a href="/teoria_" class="mx-2">
+            <a href="/teoria" class="mx-2">
                 <img src="/static/imagenes/icono_teoria.png" class="h-12 w-16" alt="">
             </a>
-            <a href="/piano_" class="mx-2">
+            <a href="/piano" class="mx-2">
                 <img src="/static/imagenes/icono_piano.png" class="h-12 w-16" alt="">
             </a>
-            <a href="/lista_" class="mx-2">
+            <a href="/lista_canciones" class="mx-2">
                 <img src="/static/imagenes/icono_lista.png" class="h-12 w-10" alt="">
             </a>
         </div>
+        <img src="/static/imagenes/barrita vacia.png" class="estrellita" alt="">
         <div class="flex items-center">
-            <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
-                <button class="text-white font-bold hover:bg-orange-600 transition duration-300 ">
-                    Iniciar Sesión
-                </button>
+            <div class="text-blue-500 font-bold text-lg mx-4">
+                <h2>{{ g.nombre }}</h2>
             </div>
         </div>
     </header>
@@ -66,7 +70,7 @@
                     Aprende todo sobre las notas musicales y cómo reconocerlas en el juego dando click con el cursor encima para ver el nombre y su sonido. Esta sección te ayudará a entender las bases musicales necesarias para progresar en Music Kids.
                 </p>
                 <img src="/static/imagenes/Pentagrama notas soporte.png" alt="Conocer las Notas" class="mx-auto mb-4 rounded-lg" style="width: 500px; height: 300px;">
-                <a href="/templates/teoria_notas.html" class="text-lg text-blue-500 hover:underline">Ir a conocer las notas</a>
+                <a href="/teoria" class="text-lg text-blue-500 hover:underline">Ir a conocer las notas</a>
             </section>
 
             <!-- Funcionamiento del Teclado -->
@@ -76,7 +80,7 @@
                     Descubre cómo utilizar el teclado en el juego dando click en el cursor por encima para poder escuchar la notas del piano, te ayudará ver el nombre de las notas por encima de su respectiva tecla.
                 </p>
                 <img src="/static/imagenes/Piano libre soporte.png" alt="Funcionamiento del Teclado" class="mx-auto mb-4 rounded-lg" style="width: 500px; height: 300px;">
-                <a href="/templates/piano_libre.html" class="text-lg text-blue-500 hover:underline">Ir al funcionamiento del teclado</a>
+                <a href="/piano" class="text-lg text-blue-500 hover:underline">Ir al funcionamiento del teclado</a>
             </section>
 
             <!-- Listas de Canciones -->
@@ -90,7 +94,7 @@
                     Dale click a iniciar canción para poder empezar y luego sigue las notas del pentagrama con el piano para poder escuchar una hermosa melodía. 
                 </p>
                 <img src="/static/imagenes/Cancion facil soporte.png" alt="Canción Fácil" class="mx-auto mb-4 rounded-lg" style="width: 500px; height: 300px;">
-                <a href="/templates/lista_canciones.html" class="text-lg text-blue-500 hover:underline">Ir a las listas de canciones</a>
+                <a href="/lista_canciones" class="text-lg text-blue-500 hover:underline">Ir a las listas de canciones</a>
             </section>
         </div>
     </div>
