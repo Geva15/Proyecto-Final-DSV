@@ -112,13 +112,13 @@ def obtener_imagen_barra_y_puntos(nombre_usuario, db_cursor):
         imagen_barra = "barrita vacia.png"
     elif 280 <= porcentaje_progreso <=500:
         imagen_barra = "barrita primera estrella.png"
-    elif 500 < porcentaje_progreso < 890:
+    elif 500 < porcentaje_progreso < 900:
         imagen_barra = "barrita primera estrella media.png"
-    elif 890 <= porcentaje_progreso <=1200:
+    elif 900 <= porcentaje_progreso <=1200:
         imagen_barra = "barrita segunda estrella.png"
-    elif 1200 < porcentaje_progreso < 1610:
+    elif 1200 < porcentaje_progreso < 1620:
         imagen_barra = "barrita segunda estrella media.png"
-    elif porcentaje_progreso >= 1610:
+    elif porcentaje_progreso >= 1620:
         imagen_barra = "barrita tercera estrella.png"
     else:
         imagen_barra = "barrita tercera estrella.png"
