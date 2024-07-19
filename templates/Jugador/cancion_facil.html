@@ -222,6 +222,15 @@
                         console.error(`Error playing note: ${note}`, error);
                     });
                 }
+
+                function playWrongSound() {
+                    const audio = new Audio('/static/efectos-sonido/Perdiste.wav');
+                    audio.play().then(() => {
+                        console.log('Played wrong note sound');
+                    }).catch(error => {
+                        console.error('Error playing wrong note sound', error);
+                    });
+                }
     
                 function highlightNoteOnStaff(noteIndex) {
                     const pentagrama = document.querySelector('.pentagrama');
@@ -247,14 +256,19 @@
                             updateNotesOnStaff();
                             highlightNoteOnStaff(currentNoteIndex);
                         } else {
-            
                             setTimeout(() => {
+                                const audio = new Audio('/static/efectos-sonido/Ganaste.wav');
+                                    audio.play().then(() => {
+                                    }).catch(error => {
+                                        console.error('Error al reproducir musica', error);
+                                    });
                                 Swal.fire({
                                     title: '¡Felicidades!',
                                     text: `Has completado la canción con ${puntaje} puntos.`,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar'
                                 }).then(() => {
+                                    
                                     guardarPuntaje();
                                     window.location.href = '/lista_canciones';
                                 });
@@ -264,6 +278,7 @@
                     } else {
                         puntaje -= puntosPorError;
                         document.getElementById('puntosObtenidosInput').value = puntaje; // Actualiza el valor del puntaje en el formulario
+                        playWrongSound(); // Reproduce el sonido de "perdiste"
                         const keyElement = document.querySelector(`.key[data-note="${note}"]`);
                         keyElement.classList.add('wrong');
                         setTimeout(() => {
@@ -321,7 +336,10 @@
                 document.querySelectorAll('.key').forEach(key => {
                     key.addEventListener('click', (event) => {
                         const note = event.target.getAttribute('data-note');
-                        playNoteOnPiano(note);
+                        // No llamar a playNoteOnPiano si la nota es incorrecta
+                        if (note === notesSequence[currentNoteIndex]) {
+                            playNoteOnPiano(note);
+                        }
                         checkNotePlayed(note);
                     });
                 });
