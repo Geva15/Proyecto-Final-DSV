@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Piano y Pentagrama - Music Kids</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .piano-container, .pentagrama-container {
             display: flex;
@@ -141,10 +143,17 @@
                 <img src="/static/imagenes/icono_lista.png" class="h-12 w-10" alt="">
             </a>
         </div>
-        <img src="/static/imagenes/barrita vacia.png" class="estrellita" alt="">
+        <img src="/static/imagenes/{{ imagen_barra }}" class="estrellita" alt="Barra de Progreso">
         <div class="flex items-center">
             <div class="text-blue-500 font-bold text-lg mx-4">
                 <h2>{{ g.nombre }}</h2>
+            </div>
+            <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
+                {% if user_logged_in %}
+                    <a href="/logout" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
+                        Cerrar Sesión
+                    </a>
+                {% endif %}
             </div>
             <a href="/soporte">
                 <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">
@@ -154,7 +163,15 @@
     </header>
     <section class="bg-blue-100 text-center">
         <div class="fixed top-20 w-full z-0">
-            <button id="start-song" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300 mt-5">Iniciar Canción</button>
+            <h2 id="nombre-cancion" class="text-2xl font-bold mt-4"></h2>
+            <button id="start-song" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300 mt-2">Iniciar Canción</button>
+            <input type="hidden" id="puntosTotalesInput" value="{{ cancion.puntos_totales }}">
+
+            <form id="puntajeForm">
+                <input type="hidden" name="nombre_usuario" value="{{ g.nombre }}">
+                <input type="hidden" id="cancionIdInput" name="cancion_id">
+                <input type="hidden" id="puntosObtenidosInput" name="puntos_obtenidos">
+            </form>
             <div class="pentagrama-container -mt-20">
                 <div class="pentagrama mx-auto"></div>
             </div>
@@ -178,16 +195,25 @@
     </section>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("Documento cargado");
             const notas = localStorage.getItem('notasCancion');
-            if (notas) {
+            const cancionId = localStorage.getItem('cancionId');
+            const nombreCancion = localStorage.getItem('nombreCancion');
+            let puntaje = parseInt(document.getElementById('puntosTotalesInput').value); // Puntaje inicial desde la base de datos
+            const puntosPorError = 10; 
+            if (notas && cancionId) {
+                document.getElementById('cancionIdInput').value = cancionId;
+                document.getElementById('puntosObtenidosInput').value = puntaje;
+    
+                // Mostrar nombre de la canción en el HTML
+                document.getElementById('nombre-cancion').innerText = `Canción: ${nombreCancion}`;
+    
                 console.log("Notas cargadas desde localStorage:", notas);
                 let notesSequence = JSON.parse(notas);
                 notesSequence = notesSequence.map(note => note.replace(/["\s]+/g, ''));
-
+    
                 let currentNoteIndex = 0;
                 let isSongStarted = false;
-
+    
                 function playNoteOnPiano(note) {
                     const audio = new Audio(`/static/notas/${note}.wav`);
                     audio.play().then(() => {
@@ -196,7 +222,7 @@
                         console.error(`Error playing note: ${note}`, error);
                     });
                 }
-
+    
                 function highlightNoteOnStaff(noteIndex) {
                     const pentagrama = document.querySelector('.pentagrama');
                     const notes = pentagrama.querySelectorAll('.nota');
@@ -211,7 +237,7 @@
                         }
                     });
                 }
-
+    
                 function checkNotePlayed(note) {
                     if (!isSongStarted) return;
                     console.log(`Checking note played: ${note}`);
@@ -221,10 +247,23 @@
                             updateNotesOnStaff();
                             highlightNoteOnStaff(currentNoteIndex);
                         } else {
-                            alert("¡Felicidades! Has completado la canción.");
+            
+                            setTimeout(() => {
+                                Swal.fire({
+                                    title: '¡Felicidades!',
+                                    text: `Has completado la canción con ${puntaje} puntos.`,
+                                    icon: 'success',
+                                    confirmButtonText: 'Aceptar'
+                                }).then(() => {
+                                    guardarPuntaje();
+                                    window.location.href = '/lista_canciones';
+                                });
+                            }, 1000);
                             isSongStarted = false;
                         }
                     } else {
+                        puntaje -= puntosPorError;
+                        document.getElementById('puntosObtenidosInput').value = puntaje; // Actualiza el valor del puntaje en el formulario
                         const keyElement = document.querySelector(`.key[data-note="${note}"]`);
                         keyElement.classList.add('wrong');
                         setTimeout(() => {
@@ -232,7 +271,7 @@
                         }, 500);
                     }
                 }
-
+    
                 function createNotesOnStaff() {
                     const pentagrama = document.querySelector('.pentagrama');
                     pentagrama.innerHTML = '<img src="/static/imagenes/claveSol.png" alt="Clave sol" class="clave">';
@@ -249,35 +288,53 @@
                         pentagrama.appendChild(noteElement);
                     }
                 }
-
+    
                 function updateNotesOnStaff() {
                     const pentagrama = document.querySelector('.pentagrama');
                     pentagrama.innerHTML = '';
                     createNotesOnStaff();
                 }
-
+    
+                function guardarPuntaje() {
+                    const formData = new FormData(document.getElementById('puntajeForm'));
+    
+                    // Imprimir datos en la consola
+                    console.log("Nombre de usuario:", formData.get('nombre_usuario'));
+                    console.log("ID de canción:", formData.get('cancion_id'));
+                    console.log("Puntaje:", formData.get('puntos_obtenidos'));
+    
+                    fetch('/guardar_puntaje', {
+                        method: 'POST',
+                        body: formData
+                    }).then(response => {
+                        console.log("Estado del POST:", response.status);
+                        if (response.ok) {
+                            console.log("Puntaje guardado exitosamente");
+                        } else {
+                            console.error("Error al guardar el puntaje");
+                        }
+                    }).catch(error => {
+                        console.error("Error al guardar el puntaje", error);
+                    });
+                }
+    
                 document.querySelectorAll('.key').forEach(key => {
-                    key.addEventListener('click', () => {
-                        const note = key.getAttribute('data-note');
-                        console.log(`Key pressed: ${note}`);
+                    key.addEventListener('click', (event) => {
+                        const note = event.target.getAttribute('data-note');
                         playNoteOnPiano(note);
-                        key.classList.add('pressed');
-                        setTimeout(() => {
-                            key.classList.remove('pressed');
-                        }, 100);
                         checkNotePlayed(note);
                     });
                 });
-
+    
                 document.getElementById('start-song').addEventListener('click', () => {
+                    if (isSongStarted) return;
                     isSongStarted = true;
-                    currentNoteIndex = 0;
-                    updateNotesOnStaff();
+                    createNotesOnStaff();
                     highlightNoteOnStaff(currentNoteIndex);
-                    console.log("Canción iniciada");
+                    document.getElementById('start-song').style.display = 'none'; // Ocultar el botón
                 });
             } else {
-                console.error("No se encontraron notas en el localStorage");
+                console.error('No se encontraron notas o ID de la canción en localStorage');
             }
         });
     </script>

@@ -32,44 +32,56 @@
                 <img src="/static/imagenes/icono_lista.png" class="h-12 w-10" alt="">
             </a>
         </div>
-        <img src="/static/imagenes/barrita vacia.png" class="estrellita" alt="">
+        <img src="/static/imagenes/{{ imagen_barra }}" class="estrellita" alt="Barra de Progreso">
         <div class="flex items-center">
             <div class="text-blue-500 font-bold text-lg mx-4">
                 <h2>{{ g.nombre }}</h2>
             </div>
+            <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
+                {% if user_logged_in %}
+                    <a href="/logout" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
+                        Cerrar Sesión
+                    </a>
+                {% endif %}
+            </div>
             <a href="soporte.html">
                 <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">
             </a>
-
         </div>
     </header>
     <section class="pt-20">
         <h2 class="text-2xl font-bold mb-4 mt-4">Lista de Canciones</h2>
         <div class="container mx-auto px-4">
             {% for cancion in canciones %}
-                <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-                    <h3 class="text-xl font-bold p-1 bg-yellow-300 rounded-xl">{{ cancion['dificultad'] }}</h3>
-                    <ul class="flex items-center mt-4">
-                        <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="iniciar-cancion" data-notas="{{ cancion['notas'] }}">
-                            <img src="/static/imagenes/play.png" class="w-12" alt="">
-                        </a>
-                        
-                        <!-- Suponiendo que cada canción tiene su propia imagen asociada -->
-                        <img src="/static/imagenes/{{ cancion['imagen'] }}" alt="" class="w-24 mx-4">
-                        <li class="flex items-center">
-                            <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="text-blue-500 hover:underline text-xl font-bold">{{ cancion['nombre_cancion'] }}</a>
-                        </li>
-                    </ul>
-                </div>
+            <div class="bg-white p-4 rounded-lg shadow-md mb-4 relative">
+                <h3 class="text-xl font-bold p-1 bg-yellow-300 rounded-xl">{{ cancion['dificultad'] }}</h3>
+                <ul class="flex items-center mt-4">
+                    <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="iniciar-cancion" data-id="{{ cancion['id_cancion'] }}" data-notas="{{ cancion['notas'] }}" data-nombre="{{ cancion['nombre_cancion'] }}">
+                        <img src="/static/imagenes/play.png" class="w-12" alt="">
+                    </a>
+                    <img src="{{ cancion['foto'] }}" alt="" class="w-24 mx-4">
+                    <li class="flex items-center flex-grow">
+                        <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="text-blue-500 hover:underline text-xl font-bold">{{ cancion['nombre_cancion'] }}</a>
+                    </li>
+                    <!-- Mostrar el puntaje máximo en la esquina derecha -->
+                    <div class="absolute right-4 top-4 bg-yellow-300 p-2 rounded-lg">
+                        <span class="text-lg font-semibold">Puntaje: {{ cancion['puntaje_maximo'] }}</span>
+                    </div>
+                </ul>
+            </div>
             {% endfor %}
-        </div>
     </section>
+    
     <script>
         document.querySelectorAll('.iniciar-cancion').forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
                 const notas = button.getAttribute('data-notas');
+                const id = button.getAttribute('data-id');
+                const nombre = button.getAttribute('data-nombre');
                 localStorage.setItem('notasCancion', JSON.stringify(notas.split(',')));
+                localStorage.setItem('cancionId', id);
+                localStorage.setItem('nombreCancion', nombre);
                 window.location.href = button.getAttribute('href');
             });
         });

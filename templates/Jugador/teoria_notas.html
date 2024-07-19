@@ -73,10 +73,17 @@
             </a>
             
         </div>
-        <img src="/static/imagenes/barrita vacia.png" class="estrellita" alt="">
+        <img src="/static/imagenes/{{ imagen_barra }}" class="estrellita" alt="Barra de Progreso">
         <div class="flex items-center">
             <div class="text-blue-500 font-bold text-lg mx-4">
                 <h2>{{ g.nombre }}</h2>
+            </div>
+            <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
+                {% if user_logged_in %}
+                    <a href="/logout" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
+                        Cerrar Sesión
+                    </a>
+                {% endif %}
             </div>
             <a href="soporte.html">
                 <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">

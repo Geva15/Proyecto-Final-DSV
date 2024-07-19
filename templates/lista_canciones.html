@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Canciones - Music Kids</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-blue-100 text-center">
+<body class="bg-blue-100 text-center" data-user-logged-in="{{ user_logged_in }}">
     <header class="bg-white shadow-md p-4 flex items-center justify-between fixed z-10 w-full">
         <div class="flex items-center">
             <img src="/static/imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
@@ -29,9 +30,9 @@
         </div>
         <div class="flex items-center">
             <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
-                <button class="text-white font-bold hover:bg-orange-600 transition duration-300 ">
+                <a href="/login" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
                     Iniciar Sesión
-                </button>
+                </a>
             </div>
             <a href="/soporte_">
                 <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">
@@ -41,31 +42,49 @@
     <section class="pt-20">
         <h2 class="text-2xl font-bold mb-4 mt-4">Lista de Canciones</h2>
         <div class="container mx-auto px-4">
-            {% for cancion in canciones %}
-                <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-                    <h3 class="text-xl font-bold p-1 bg-yellow-300 rounded-xl">{{ cancion['dificultad'] }}</h3>
-                    <ul class="flex items-center mt-4">
-                        <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="iniciar-cancion" data-notas="{{ cancion['notas'] }}">
-                            <img src="/static/imagenes/play.png" class="w-12" alt="">
-                        </a>
-                        
-                        <!-- Suponiendo que cada canción tiene su propia imagen asociada -->
-                        <img src="/static/imagenes/{{ cancion['imagen'] }}" alt="" class="w-24 mx-4">
-                        <li class="flex items-center">
-                            <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="text-blue-500 hover:underline text-xl font-bold">{{ cancion['nombre_cancion'] }}</a>
-                        </li>
-                    </ul>
-                </div>
-            {% endfor %}
+        {% for cancion in canciones %}
+            <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+                <h3 class="text-xl font-bold p-1 bg-yellow-300 rounded-xl">{{ cancion['dificultad'] }}</h3>
+                <ul class="flex items-center mt-4">
+                    <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="iniciar-cancion" data-id="{{ cancion['id_cancion'] }}" data-notas="{{ cancion['notas'] }}" data-nombre="{{ cancion['nombre_cancion'] }}">
+                        <img src="/static/imagenes/play.png" class="w-12" alt="">
+                    </a>
+                    <img src="{{ cancion['foto'] }}" alt="" class="w-24 mx-4">
+                    <li class="flex items-center">
+                        <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="text-blue-500 hover:underline text-xl font-bold">{{ cancion['nombre_cancion'] }}</a>
+                    </li>
+                </ul>
+            </div>
+        {% endfor %}
         </div>
     </section>
     <script>
-        document.querySelectorAll('.iniciar-cancion').forEach(button => {
-            button.addEventListener('click', (event) => {
-                event.preventDefault();
-                const notas = button.getAttribute('data-notas');
-                localStorage.setItem('notasCancion', JSON.stringify(notas.split(',')));
-                window.location.href = button.getAttribute('href');
+        document.addEventListener('DOMContentLoaded', function () {
+            const userIsAuthenticated = document.body.getAttribute('data-user-logged-in') === 'True';
+            const iniciarCancionLinks = document.querySelectorAll('.iniciar-cancion');
+
+            iniciarCancionLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    if (!userIsAuthenticated) {
+                        event.preventDefault();
+                        Swal.fire({
+                            title: 'Debes iniciar sesión',
+                            text: 'Para tocar las canciones, debes iniciar sesión.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Iniciar Sesión',
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/login'; 
+                            }
+                        });
+                    } else {
+                        const notas = link.getAttribute('data-notas');
+                        localStorage.setItem('notasCancion', JSON.stringify(notas.split(',')));
+                        window.location.href = link.getAttribute('href');
+                    }
+                });
             });
         });
     </script>
