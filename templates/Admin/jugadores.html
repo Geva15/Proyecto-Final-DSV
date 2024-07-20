@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Usuarios - Music Kids</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-blue-100 text-center">
+    <header class="bg-white shadow-md p-2 flex items-center justify-between fixed z-10 w-full">
+        <div class="flex items-center">
+            <img src="/static//imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
+            <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
+            <a href="/admin_home" class="ml-10 mr-2">
+                <img src="/static//imagenes/inicio.png" class="h-12 w-12" alt="">
+            </a>
+            <a href="/jugadores" class="mx-2">
+                <img src="/static//imagenes/user.png" class="h-12 w-14" alt="">
+            </a>
+            <a href="/administrativos" class="mx-2">
+                <img src="/static//imagenes/admin.png" class="h-16 w-16" alt="">
+            </a>
+            <a href="/canciones_admin" class="mx-2">
+                <img src="/static//imagenes/canciones.png" class="h-12 w-12" alt="">
+            </a>
+        </div>
+        <button id="switchMode" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">Ver como Jugador</button>
+    </header>
+    <section class="pt-20">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between mt-4 mb-4">
+                <h2 class="text-2xl font-bold mx-4">Tabla Usuario</h2>
+                <button id="addUser" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Agregar Usuario</button>    
+                <button id="delUser" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Eliminar Usuario</button>    
+                <button id="editUser" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Editar Usuario</button>    
+            </div>
+            <div class="p-4 mb-4">
+                <table class="shadow-md min-w-full bg-white mt-4 border border-gray-400 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-100 border-b border-gray-400">
+                        <tr>
+                            <th class="py-2 px-4 border-r border-gray-400 text-gray-600 font-semibold">id</th>
+                            <th class="py-2 px-4 border-r border-gray-400 text-gray-600 font-semibold">nombre</th>
+                            <th class="py-2 px-4 text-gray-600 font-semibold">contraseña</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userList">
+                        {% for user in users %}
+                        <tr class="border-b border-gray-200">
+                            <td class="border-b border-r border-gray-400 py-2 px-4">{{ user.id }}</td>
+                            <td class="border-b border-r border-gray-400 py-2 px-4">{{ user.nombre }}</td>
+                            <td class="border-b border-gray-400 py-2 px-4">{{ user.contraseña }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>            
+        </div>
+    </section>
+    <!-- Modal para CRUD-ADD -->
+    <div id="crudModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-4 rounded-lg shadow-md w-1/3">
+            <h3 class="text-xl font-bold mb-4" id="modalTitle">Agregar Usuario</h3>
+            <form id="crudForm" method="POST" action="/jugadores">
+                <input type="hidden" id="userId">
+                <div class="mb-4">
+                    <label for="userName" class="block text-left">Nombre:</label>
+                    <input type="text" id="userName" name="userName" class="w-full px-2 py-1 border rounded" required>
+                </div>
+                <div class="mb-4">
+                    <label for="userPassword" class="block text-left">Contraseña:</label>
+                    <input id="userPassword" name="userPassword" class="w-full px-2 py-1 border rounded" required>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2">Cancelar</button>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Modal para CRUD-DELETE -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-4 rounded-lg shadow-md w-1/3">
+        <h3 class="text-xl font-bold mb-4" id="modalTitle">Eliminar Usuario</h3>
+        <form id="deleteForm" method="POST" action="/jugadores">
+            <div class="mb-4">
+                <label for="userIdDelete" class="block text-left">ID del Usuario que desea eliminar:</label>
+                <input type="number" id="userIdDelete" name="userIdDelete" class="w-full px-2 py-1 border rounded" required>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" id="cancelDeleteButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2">Cancelar</button>
+                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Eliminar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Modal para CRUD-EDIT -->
+<div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-4 rounded-lg shadow-md w-1/3">
+        <h3 class="text-xl font-bold mb-4">Editar Usuario</h3>
+        <form id="editForm" method="POST" action="/jugadores">
+            <div class="mb-4">
+                <label for="userIdUpdate" class="block text-left">ID del Usuario que desea editar:</label>
+                <input type="number" id="userIdUpdate" name="userIdUpdate" class="w-full px-2 py-1 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="userNameUpdate" class="block text-left">Nuevo Nombre:</label>
+                <input type="text" id="userNameUpdate" name="userNameUpdate" class="w-full px-2 py-1 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="userPasswordUpdate" class="block text-left">Nueva Contraseña:</label>
+                <input type="text" id="userPasswordUpdate" name="userPasswordUpdate" class="w-full px-2 py-1 border rounded" required>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" id="cancelEditButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2">Cancelar</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('switchMode').addEventListener('click', () => {
+        window.location.href = 'inicio_vista.html';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const addUserButton = document.getElementById('addUser');
+    const deleteUserButton = document.getElementById('delUser');
+    const editUserButton = document.getElementById('editUser');
+
+    const crudModal = document.getElementById('crudModal');
+    const deleteModal = document.getElementById('deleteModal');
+    const editModal = document.getElementById('editModal');
+
+    const cancelButton = document.getElementById('cancelButton');
+    const cancelDeleteButton = document.getElementById('cancelDeleteButton');
+    const cancelEditButton = document.getElementById('cancelEditButton');
+
+    // Mostrar el modal de agregar usuario
+    addUserButton.addEventListener('click', () => {
+        crudModal.classList.remove('hidden');
+    });
+
+    // Ocultar el modal de agregar usuario al hacer clic en "Cancelar"
+    cancelButton.addEventListener('click', () => {
+        crudModal.classList.add('hidden');
+    });
+
+    // Mostrar el modal de eliminar administrador
+    deleteUserButton.addEventListener('click', () => {
+        deleteModal.classList.remove('hidden');
+    });
+
+    // Ocultar el modal de eliminar administrador al hacer clic en "Cancelar"
+    cancelDeleteButton.addEventListener('click', () => {
+        deleteModal.classList.add('hidden');
+    });
+
+    // Mostrar el modal de editar administrador
+    editUserButton.addEventListener('click', () => {
+        editModal.classList.remove('hidden');
+    });
+
+    // Ocultar el modal de editar administrador al hacer clic en "Cancelar"
+    cancelEditButton.addEventListener('click', () => {
+        editModal.classList.add('hidden');
+    });
+});
+</script>
+</body>
+</html>

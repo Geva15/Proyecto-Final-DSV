@@ -55,13 +55,21 @@ def login():
         cur.close()
 
         if usuario:
-            # Iniciar sesión correctamente
             session['username'] = nombre
+            session['role'] = 'user'
             return redirect(url_for('user_home', username=nombre))
-        else:
-            # Mostrar un mensaje de error
-            flash('Nombre de usuario o contraseña incorrectos', 'error')
-            return render_template('login.html')
+        else:#Si no es jugador revisa si es admin
+            cur = mysql.connection.cursor()
+            cur.execute('SELECT * FROM Administrador WHERE nombre_admin = %s AND contraseña_admin = %s', (nombre, password))
+            admin = cur.fetchone()
+            cur.close()
+            if admin:#Si es admin lo redirige a la pantalla de admin
+                session['username'] = nombre
+                session['role'] = 'admin'
+                return redirect(url_for('admin_home', username=nombre))
+            else:#Si no es ninguno de los 2 usuarios le manda error
+                flash('Nombre de usuario o contraseña incorrectos', 'error')
+                return render_template('login.html')
 
     return render_template('login.html')
 
@@ -277,6 +285,141 @@ def lista_():
     cur.close()
     user_logged_in = 'logged_in' in session
     return render_template('lista_canciones.html',canciones=canciones, user_logged_in=user_logged_in)
+
+#A partir de aquí inician las rutas de crud para jugadores
+@app.route('/jugadores', methods=['GET', 'POST'])
+def jugadores():
+    if request.method == 'POST':
+        if 'userIdDelete' in request.form:
+            # Manejar la eliminación de un usuario
+            user_id = request.form.get('userIdDelete')
+            cur = mysql.connection.cursor()
+            cur.callproc('DeleteUser', [user_id])
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('jugadores'))
+
+        if 'userIdUpdate' in request.form:
+            # Manejar la actualización de un usuario
+            user_id = request.form.get('userIdUpdate')
+            nombre_user = request.form.get('userNameUpdate')
+            contraseña_user = request.form.get('userPasswordUpdate')
+
+            cur = mysql.connection.cursor()
+            cur.callproc('UpdateUser', [user_id, nombre_user, contraseña_user])
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('jugadores'))
+
+        # Manejar la inserción de un nuevo jugador
+        nombre_user = request.form.get('userName')
+        contraseña_user = request.form.get('userPassword')
+
+        cur = mysql.connection.cursor()
+        cur.callproc('InsertUser', [nombre_user, contraseña_user])
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('jugadores'))
+
+    # Manejar la consulta de los jugadores
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM Usuario')
+    users = cur.fetchall()
+    cur.close()
+    return render_template('/Admin/jugadores.html', users=users)
+
+@app.route('/administrativos', methods=['GET', 'POST'])
+def administrativos():
+    if request.method == 'POST':
+        if 'adminIdDelete' in request.form:
+            # Manejar la eliminación de un administrador
+            admin_id = request.form.get('adminIdDelete')
+            cur = mysql.connection.cursor()
+            cur.execute('DELETE FROM Administrador WHERE id_admin = %s', (admin_id,))
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('administrativos'))
+
+        if 'adminIdUpdate' in request.form:
+            # Manejar la actualización de un administrador
+            admin_id = request.form.get('adminIdUpdate')
+            nombre_admin = request.form.get('adminNameUpdate')
+            contraseña_admin = request.form.get('adminPasswordUpdate')
+
+            cur = mysql.connection.cursor()
+            cur.callproc('UpdateAdmin', [admin_id, nombre_admin, contraseña_admin])
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('administrativos'))
+
+        # Manejar la inserción de un nuevo administrador
+        nombre_admin = request.form.get('adminName')
+        contraseña_admin = request.form.get('adminPassword')
+
+        cur = mysql.connection.cursor()
+        cur.callproc('InsertAdmin', [nombre_admin, contraseña_admin])
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('administrativos'))
+
+    # Manejar la consulta de los administrativos
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM Administrador')
+    admins = cur.fetchall()
+    cur.close()
+    return render_template('/Admin/administrativos.html', admins=admins)
+
+
+@app.route('/canciones_admin', methods=['GET', 'POST'])
+def canciones_admin():
+    if request.method == 'POST':
+        if 'songIdDelete' in request.form:
+            # Manejar la eliminación de una canción
+            song_id = request.form.get('songIdDelete')
+            cur = mysql.connection.cursor()
+            cur.callproc('DeleteSong', [song_id])
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('canciones_admin'))
+
+        if 'songIdUpdate' in request.form:
+            # Manejar la actualización de una Canción
+            song_id = request.form.get('songIdUpdate')
+            nombre_song = request.form.get('songNameUpdate')
+            dificultad_song = request.form.get('songDificultadUpdate')
+            notes_song = request.form.get('songNotesUpdate')
+            points_song = request.form.get('songPointsUpdate')
+            foto_song = request.form.get('songFotoUpdate')
+
+            cur = mysql.connection.cursor()
+            cur.callproc('UpdateSong', [song_id, nombre_song, dificultad_song, notes_song, points_song, foto_song])
+            mysql.connection.commit()
+            cur.close()
+            return redirect(url_for('canciones_admin'))
+
+        # Manejar la inserción de una nueva canción
+        nombre_song = request.form.get('songName')
+        dificultad_song = request.form.get('songDificultad')
+        notes_song = request.form.get('songNotes')
+        points_song = request.form.get('songPoints')
+        foto_song = request.form.get('songFoto')
+        
+
+        cur = mysql.connection.cursor()
+        cur.callproc('InsertSong', [nombre_song, dificultad_song, notes_song, points_song, foto_song])
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('canciones_admin'))
+
+    # Manejar la consulta de los administrativos
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM Canciones')
+    songs = cur.fetchall()
+    cur.close()
+    return render_template('/Admin/lista_canciones.html', songs=songs)
     
 
 if __name__ == '__main__':
