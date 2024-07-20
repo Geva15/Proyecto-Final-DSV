@@ -338,7 +338,7 @@ def jugadores():
     users = cur.fetchall()
     cur.close()
     return render_template('/Admin/jugadores.html', users=users)
-
+#aqui empiezan admin
 @app.route('/administrativos', methods=['GET', 'POST'])
 def administrativos():
     if request.method == 'POST':
@@ -430,7 +430,10 @@ def canciones_admin():
     songs = cur.fetchall()
     cur.close()
     return render_template('/Admin/lista_canciones.html', songs=songs)
-    
+
+@app.route('/ver_como_jugador')
+def ver_como_jugador():
+    return render_template('templates\Admin\Ver_como_jugador.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
