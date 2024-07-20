@@ -13,7 +13,7 @@
             <img src="/static//imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
             <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
         </div>
-        <button onclick="location.href='{{ url_for('ver_como_jugador') }}'" id="switchMode" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">Ver como Jugador</button>
+        <button onclick="location.href={{ url_for('ver_como_jugador') }}'" id="switchMode" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">Ver como Jugador</button>
     </header>
     <h1 class="text-4xl text-orange-500 mt-10">Administrar Página</h1>
     <div class="container mx-auto flex flex-wrap justify-center mt-10">

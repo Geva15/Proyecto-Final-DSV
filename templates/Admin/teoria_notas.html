@@ -53,19 +53,19 @@
         <div class="flex items-center">
             <img src="/static/imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
             <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
-            <a href="inicio.html" class="ml-10 mr-2">
+            <a href="{{ url_for('home_admin_vista_usuario') }}" class="ml-10 mr-2">
                 <img src="/static/imagenes/inicio.png" class="h-12 w-12" alt="">
             </a>
             <a href="" class="mx-2">
                 <img src="/static/imagenes/icono_tutorial.png" class="h-12 w-10" alt="">
             </a>
-            <a href="teoria_notas.html" class="mx-2">
+            <a href="{{ url_for('teoria_notas_admin') }}"class="mx-2">
                 <img src="/static/imagenes/icono_teoria.png" class="h-12 w-16" alt="">
             </a>
-            <a href="piano_libre.html" class="mx-2">
+            <a href="{{ url_for('piano_admin') }}" class="mx-2">
                 <img src="/static/imagenes/icono_piano.png" class="h-12 w-16" alt="">
             </a>
-            <a href="musica.html" class="mx-2">
+            <a href="{{ url_for('lista_canciones_admin') }}"class="mx-2">
                 <img src="/static/imagenes/icono_lista.png" class="h-12 w-10" alt="">
             </a>
             

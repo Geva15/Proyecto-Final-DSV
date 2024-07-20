@@ -446,26 +446,28 @@ def canciones_admin():
 
 @app.route('/ver_como_jugador')
 def ver_como_jugador():
-    return render_template('Admin/Ver_como_jugador.html')
+    return render_template('Admin/ver_como_jugador.html')
 
 @app.route('/admin_logout')
 def admin_logout():
     session.pop('username', None)
     session.pop('role', None)
     return redirect(url_for('inicio'))
-
 @app.route('/teoria_notas')
 def teoria_notas_admin():
-    return render_template('teoria_notas.html')
+    return render_template('Admin/teoria_notas.html')
 
 @app.route('/piano_piano')
 def piano_admin():
-    return render_template('piano_libre.html')
+    return render_template('Admin/piano_libre.html')
 
 @app.route('/lista_canciones_admin')
 def lista_canciones_admin():
-    return render_template('lista_canciones.html')
+    return render_template('Admin/lista_canciones copy.html')
 
+@app.route('/home_admin_vista_usuario')
+def home_admin_vista_usuario():
+    return render_template('Admin/ver_como_jugador')
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
