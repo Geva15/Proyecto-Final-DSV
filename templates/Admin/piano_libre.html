@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Virtual - Music Kids</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .piano-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .piano {
+            display: flex;
+            padding: 10px;
+            background: black;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 5px solid black;
+            border-radius: 10px;
+        }
+        .key {
+            width: 60px;
+            height: 300px;
+            margin: 2px;
+            background: white;
+            border: 1px solid black;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            font-size: 18px;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .key.black {
+            width: 40px;
+            height: 180px;
+            background: black;
+            color: white;
+            z-index: 2;
+            margin: 2px -20px;
+            border-radius: 5px;
+        }
+        .key span {
+            margin-bottom: 10px;
+        }
+        .key:active, .key.pressed {
+            transform: translateY(10px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .key::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: -1;
+        }
+        .key.pressed::before {
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-blue-100 text-center">
+    <header class="bg-white shadow-md p-4 flex items-center justify-between">
+        <div class="flex items-center">
+            <img src="/static/imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
+            <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
+            <a href="/home" class="ml-10 mr-2">
+                <img src="/static/imagenes/inicio.png" class="h-12 w-12" alt="">
+            </a>
+            <a href="" class="mx-2">
+                <img src="/static/imagenes/icono_tutorial.png" class="h-12 w-10" alt="">
+            </a>
+            <a href="/teoria_" class="mx-2">
+                <img src="/static/imagenes/icono_teoria.png" class="h-12 w-16" alt="">
+            </a>
+            <a href="/piano_" class="mx-2">
+                <img src="/static/imagenes/icono_piano.png" class="h-12 w-16" alt="">
+            </a>
+            <a href="/lista_" class="mx-2">
+                <img src="/static/imagenes/icono_lista.png" class="h-12 w-10" alt="">
+            </a>
+            
+        </div>
+        <div class="flex items-center">
+
+            <a href="/soporte_">
+                <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">
+            </a>
+        </div>
+        
+    </header>
+    <main class="piano-container">
+        <div class="piano">
+            <div class="key white" data-note="do"><span>Do</span></div>
+            <div class="key black" data-note="C#"><span></span></div>
+            <div class="key white" data-note="re"><span>Re</span></div>
+            <div class="key black" data-note="D#"><span></span></div>
+            <div class="key white" data-note="mi"><span>Mi</span></div>
+            <div class="key white" data-note="fa"><span>Fa</span></div>
+            <div class="key black" data-note="F#"><span></span></div>
+            <div class="key white" data-note="sol"><span>Sol</span></div>
+            <div class="key black" data-note="G#"><span></span></div>
+            <div class="key white" data-note="la"><span>La</span></div>
+            <div class="key black" data-note="A#"><span></span></div>
+            <div class="key white" data-note="si"><span>Si</span></div>
+        </div>
+    </main>
+    <script>
+        document.querySelectorAll('.key').forEach(key => {
+            key.addEventListener('click', () => {
+                const note = key.getAttribute('data-note');
+                const audio = new Audio(`/static/notas/${note}.wav`);
+                audio.play();
+
+                key.classList.add('pressed');
+                setTimeout(() => {
+                    key.classList.remove('pressed');
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

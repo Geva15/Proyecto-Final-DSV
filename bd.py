@@ -79,11 +79,15 @@ def logout():
     return redirect(url_for('inicio'))
 
 @app.before_request
+@app.before_request
 def add_user_to_template():
     if 'username' in session:
         g.nombre = session['username']
+        g.is_admin = session.get('role') == 'admin'
     else:
         g.nombre = None
+        g.is_admin = False
+
 
 
 @app.route('/user_home')
@@ -94,7 +98,7 @@ def user_home():
     cur.close()
     return render_template('/Jugador/inicio.html', imagen_barra=imagen_barra, user_logged_in=user_logged_in)
 
-@app.route('/admin_home')#Ruta que lleva a la página de Admin
+"""@app.route('/admin_home')#Ruta que lleva a la página de Admin
 def admin_home():
     if 'username' in session and session.get('role') == 'admin':
         admin_logged_in = True
@@ -103,7 +107,16 @@ def admin_home():
         flash('Acceso no autorizado.', 'error')
         return redirect(url_for('login'))
 
-    return render_template('/Admin/inicio_admin.html', admin_logged_in=admin_logged_in)
+    return render_template('/Admin/inicio_admin.html', admin_logged_in=admin_logged_in)"""
+@app.route('/admin_home')
+def admin_home():
+    if g.is_admin:
+        admin_logged_in = True
+        return render_template('/Admin/inicio_admin.html', admin_logged_in=admin_logged_in)
+    else:
+        flash('Acceso no autorizado.', 'error')
+        return redirect(url_for('login'))
+
 
 def obtener_imagen_barra_y_puntos(nombre_usuario, db_cursor):
     # Obtener puntos totales del usuario
@@ -435,22 +448,24 @@ def canciones_admin():
 def ver_como_jugador():
     return render_template('Admin/Ver_como_jugador.html')
 
-def login():
-    session['logged_in'] = True
-    return redirect(url_for('templates/inicio.html'))
+@app.route('/admin_logout')
+def admin_logout():
+    session.pop('username', None)
+    session.pop('role', None)
+    return redirect(url_for('inicio'))
 
-# Cerrar sesión
-@app.route('/logout')
-def logout():
-    session.pop('logged_in', None)
-    return redirect(url_for('templates/inicio.html'))
+@app.route('/teoria_notas')
+def teoria_notas_admin():
+    return render_template('teoria_notas.html')
 
-@app.route('/inicio_admin')
-def inicio_admin():
-    if 'logged_in' in session:
-        return render_template('templates/inicio.html', logged_in=True)
-    else:
-        return render_template('templates/inicio.html', logged_in=False)
+@app.route('/piano_piano')
+def piano_admin():
+    return render_template('piano_libre.html')
+
+@app.route('/lista_canciones_admin')
+def lista_canciones_admin():
+    return render_template('lista_canciones.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
