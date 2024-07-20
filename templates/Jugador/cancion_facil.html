@@ -268,9 +268,8 @@
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar'
                                 }).then(() => {
-                                    
                                     guardarPuntaje();
-                                    window.location.href = '/lista_canciones';
+                                    window.location.href = '/lista_canciones?reload=true';
                                 });
                             }, 1000);
                             isSongStarted = false;

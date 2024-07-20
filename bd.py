@@ -163,8 +163,28 @@ def lista_canciones():
     user_logged_in = g.nombre is not None
     cur = mysql.connection.cursor()
     query = 'SELECT c.id_cancion, c.nombre_cancion, c.dificultad, c.notas, c.foto, COALESCE(uc.puntos_obtenidos, 0) AS puntaje_maximo FROM Canciones c LEFT JOIN Usuario_Canciones uc ON c.id_cancion = uc.id_cancion AND uc.id = (SELECT id FROM Usuario WHERE nombre = %s)'
+    
+    
     cur.execute(query, (g.nombre,))
     canciones = cur.fetchall()
+
+    query_puntajes = '''
+        SELECT c.id_cancion, COALESCE(uc.puntos_obtenidos, 0) AS puntaje_maximo
+        FROM Canciones c
+        LEFT JOIN Usuario_Canciones uc
+        ON c.id_cancion = uc.id_cancion
+        AND uc.id = (SELECT id FROM Usuario WHERE nombre = %s)
+        ORDER BY c.id_cancion
+    '''
+    cur.execute(query_puntajes, (g.nombre,))
+    puntajes = cur.fetchall()
+
+    puntos_necesarios = [280, 620] 
+    for i, cancion in enumerate(canciones):
+        if i == 0:
+            cancion['desbloqueada'] = True
+        else:
+            cancion['desbloqueada'] = puntajes[i-1]['puntaje_maximo'] >= puntos_necesarios[i-1]
 
     imagen_barra = obtener_imagen_barra_y_puntos(g.nombre, cur)
 

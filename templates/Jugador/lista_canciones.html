@@ -53,15 +53,23 @@
         <h2 class="text-2xl font-bold mb-4 mt-4">Lista de Canciones</h2>
         <div class="container mx-auto px-4">
             {% for cancion in canciones %}
-            <div class="bg-white p-4 rounded-lg shadow-md mb-4 relative">
+            <div class="bg-white p-4 rounded-lg shadow-md mb-4 relative {% if not cancion.desbloqueada %}opacity-50{% endif %}">
                 <h3 class="text-xl font-bold p-1 bg-yellow-300 rounded-xl">{{ cancion['dificultad'] }}</h3>
                 <ul class="flex items-center mt-4">
+                    {% if cancion.desbloqueada %}
                     <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="iniciar-cancion" data-id="{{ cancion['id_cancion'] }}" data-notas="{{ cancion['notas'] }}" data-nombre="{{ cancion['nombre_cancion'] }}">
                         <img src="/static/imagenes/play.png" class="w-12" alt="">
                     </a>
+                    {% else %}
+                    <img src="/static/imagenes/candado.png" class="w-12" alt="Bloqueado">
+                    {% endif %}
                     <img src="{{ cancion['foto'] }}" alt="" class="w-24 mx-4">
                     <li class="flex items-center flex-grow">
+                        {% if cancion.desbloqueada %}
                         <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="text-blue-500 hover:underline text-xl font-bold">{{ cancion['nombre_cancion'] }}</a>
+                        {% else %}
+                        <span class="text-gray-500 text-xl font-bold">{{ cancion['nombre_cancion'] }}</span>
+                        {% endif %}
                     </li>
                     <!-- Mostrar el puntaje máximo en la esquina derecha -->
                     <div class="absolute right-4 top-4 bg-yellow-300 p-2 rounded-lg">
@@ -70,6 +78,8 @@
                 </ul>
             </div>
             {% endfor %}
+
+
     </section>
     
     <script>
@@ -84,6 +94,12 @@
                 localStorage.setItem('nombreCancion', nombre);
                 window.location.href = button.getAttribute('href');
             });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('reload')) {
+                window.location.href = window.location.pathname; // Recarga la página sin parámetros
+            }
         });
     </script>
 </body>
