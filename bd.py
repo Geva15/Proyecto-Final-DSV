@@ -433,7 +433,24 @@ def canciones_admin():
 
 @app.route('/ver_como_jugador')
 def ver_como_jugador():
-    return render_template('templates\Admin\Ver_como_jugador.html')
+    return render_template('Admin/Ver_como_jugador.html')
+
+def login():
+    session['logged_in'] = True
+    return redirect(url_for('templates/inicio.html'))
+
+# Cerrar sesión
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('templates/inicio.html'))
+
+@app.route('/inicio_admin')
+def inicio_admin():
+    if 'logged_in' in session:
+        return render_template('templates/inicio.html', logged_in=True)
+    else:
+        return render_template('templates/inicio.html', logged_in=False)
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)

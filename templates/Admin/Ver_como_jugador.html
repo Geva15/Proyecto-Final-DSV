@@ -23,11 +23,11 @@
                 <h2>{{ g.nombre }}</h2>
             </div>
             <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
-                {% if user_logged_in %}
-                    <a href="/logout" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
-                        Cerrar Sesión
-                    </a>
-                {% endif %}
+                {% if logged_in %}
+                <a href="{{ url_for('logout') }}" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
+                    Cerrar Sesión
+                </a>
+            {% endif %}
             </div>
             <a href="/soporte">
                 <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">
