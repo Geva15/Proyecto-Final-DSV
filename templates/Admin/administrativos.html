@@ -5,23 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración de Administrativos - Music Kids</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script defer src="admin_administrativos.js"></script>
 </head>
 <body class="bg-blue-100 text-center">
     <header class="bg-white shadow-md p-2 flex items-center justify-between fixed z-10 w-full">
         <div class="flex items-center">
             <img src="/static//imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
             <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
-            <a href="inicio_admin.html" class="ml-10 mr-2">
+            <a href="/admin_home" class="ml-10 mr-2">
                 <img src="/static//imagenes/inicio.png" class="h-12 w-12" alt="">
             </a>
-            <a href="" class="mx-2">
+            <a href="/jugadores" class="mx-2">
                 <img src="/static//imagenes/user.png" class="h-12 w-14" alt="">
             </a>
-            <a href="" class="mx-2">
+            <a href="/administrativos" class="mx-2">
                 <img src="/static//imagenes/admin.png" class="h-16 w-16" alt="">
             </a>
-            <a href="" class="mx-2">
+            <a href="/canciones_admin" class="mx-2">
                 <img src="/static//imagenes/canciones.png" class="h-12 w-12" alt="">
             </a>
         </div>
@@ -31,45 +30,142 @@
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between mt-4 mb-4">
                 <h2 class="text-2xl font-bold mx-4">Tabla Administrativos</h2>
-                <button id="addAdmin" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Agregar Administrativo</button>    
+                <button id="addAdmin" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Agregar Administrativo</button>    
+                <button id="delAdmin" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Eliminar Administrativo</button>    
+                <button id="editAdmin" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Editar Administrativo</button>    
             </div>
-            <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-                <table class="min-w-full bg-white mt-4">
-                    <thead>
+            <div class="p-4 mb-4">
+                <table class="shadow-md min-w-full bg-white mt-4 border border-gray-400 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-100 border-b border-gray-400">
                         <tr>
-                            <th class="py-2">ID</th>
-                            <th class="py-2">Nombre</th>
-                            <th class="py-2">Correo</th>
+                            <th class="py-2 px-4 border-r border-gray-400 text-gray-600 font-semibold">id_admin</th>
+                            <th class="py-2 px-4 border-r border-gray-400 text-gray-600 font-semibold">nombre_admin</th>
+                            <th class="py-2 px-4 text-gray-600 font-semibold">contraseña_admin</th>
                         </tr>
                     </thead>
                     <tbody id="adminList">
-  
+                        {% for admin in admins %}
+                        <tr class="border-b border-gray-200">
+                            <td class="border-b border-r border-gray-400 py-2 px-4">{{ admin.id_admin }}</td>
+                            <td class="border-b border-r border-gray-400 py-2 px-4">{{ admin.nombre_admin }}</td>
+                            <td class="border-b border-gray-400 py-2 px-4">{{ admin.contraseña_admin }}</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
-            </div>
+            </div>            
         </div>
     </section>
-    <!-- Modal para CRUD -->
+    <!-- Modal para CRUD-ADD -->
     <div id="crudModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white p-4 rounded-lg shadow-md w-1/3">
             <h3 class="text-xl font-bold mb-4" id="modalTitle">Agregar Administrativo</h3>
-            <form id="crudForm">
+            <form id="crudForm" method="POST" action="/administrativos">
                 <input type="hidden" id="adminId">
                 <div class="mb-4">
                     <label for="adminName" class="block text-left">Nombre:</label>
-                    <input type="text" id="adminName" class="w-full px-2 py-1 border rounded">
+                    <input type="text" id="adminName" name="adminName" class="w-full px-2 py-1 border rounded" required>
                 </div>
                 <div class="mb-4">
-                    <label for="adminEmail" class="block text-left">Correo:</label>
-                    <input type="email" id="adminEmail" class="w-full px-2 py-1 border rounded">
+                    <label for="adminPassword" class="block text-left">Contraseña:</label>
+                    <input id="adminPassword" name="adminPassword" class="w-full px-2 py-1 border rounded" required>
                 </div>
                 <div class="flex justify-end">
                     <button type="button" id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2">Cancelar</button>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Guardar</button>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
-    <script src="admin.js"></script>
+    <!-- Modal para CRUD-DELETE -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-4 rounded-lg shadow-md w-1/3">
+        <h3 class="text-xl font-bold mb-4" id="modalTitle">Eliminar Administrativo</h3>
+        <form id="deleteForm" method="POST" action="/administrativos">
+            <div class="mb-4">
+                <label for="adminIdDelete" class="block text-left">ID del Administrador que desea eliminar:</label>
+                <input type="number" id="adminIdDelete" name="adminIdDelete" class="w-full px-2 py-1 border rounded" required>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" id="cancelDeleteButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2">Cancelar</button>
+                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Eliminar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Modal para CRUD-EDIT -->
+<div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-4 rounded-lg shadow-md w-1/3">
+        <h3 class="text-xl font-bold mb-4">Editar Administrativo</h3>
+        <form id="editForm" method="POST" action="/administrativos">
+            <div class="mb-4">
+                <label for="adminIdUpdate" class="block text-left">ID del Administrador que desea editar:</label>
+                <input type="number" id="adminIdUpdate" name="adminIdUpdate" class="w-full px-2 py-1 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="adminNameUpdate" class="block text-left">Nuevo Nombre:</label>
+                <input type="text" id="adminNameUpdate" name="adminNameUpdate" class="w-full px-2 py-1 border rounded" required>
+            </div>
+            <div class="mb-4">
+                <label for="adminPasswordUpdate" class="block text-left">Nueva Contraseña:</label>
+                <input type="text" id="adminPasswordUpdate" name="adminPasswordUpdate" class="w-full px-2 py-1 border rounded" required>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" id="cancelEditButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2">Cancelar</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('switchMode').addEventListener('click', () => {
+        window.location.href = 'inicio_vista.html';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const addAdminButton = document.getElementById('addAdmin');
+    const deleteAdminButton = document.getElementById('delAdmin');
+    const editAdminButton = document.getElementById('editAdmin');
+
+    const crudModal = document.getElementById('crudModal');
+    const deleteModal = document.getElementById('deleteModal');
+    const editModal = document.getElementById('editModal');
+
+    const cancelButton = document.getElementById('cancelButton');
+    const cancelDeleteButton = document.getElementById('cancelDeleteButton');
+    const cancelEditButton = document.getElementById('cancelEditButton');
+
+    // Mostrar el modal de agregar administrador
+    addAdminButton.addEventListener('click', () => {
+        crudModal.classList.remove('hidden');
+    });
+
+    // Ocultar el modal de agregar administrador al hacer clic en "Cancelar"
+    cancelButton.addEventListener('click', () => {
+        crudModal.classList.add('hidden');
+    });
+
+    // Mostrar el modal de eliminar administrador
+    deleteAdminButton.addEventListener('click', () => {
+        deleteModal.classList.remove('hidden');
+    });
+
+    // Ocultar el modal de eliminar administrador al hacer clic en "Cancelar"
+    cancelDeleteButton.addEventListener('click', () => {
+        deleteModal.classList.add('hidden');
+    });
+
+    // Mostrar el modal de editar administrador
+    editAdminButton.addEventListener('click', () => {
+        editModal.classList.remove('hidden');
+    });
+
+    // Ocultar el modal de editar administrador al hacer clic en "Cancelar"
+    cancelEditButton.addEventListener('click', () => {
+        editModal.classList.add('hidden');
+    });
+});
+</script>
 </body>
 </html>

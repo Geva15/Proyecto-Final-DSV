@@ -114,12 +114,34 @@
         .key.wrong {
             background-color: red;
         }
+        .key.correct {
+            background-color: #92FD70;
+        }
         .highlight-blue {
-            content: url('/static/imagenes/nota azul.png'); /* Reemplazar con la ruta correcta de la imagen de la nota azul */
+            content: url('/static/imagenes/nota azul.png'); 
         }
         .highlight-blue-do {
-            content: url('/static/imagenes/do azul.png'); /* Ruta específica para la nota Do */
+            content: url('/static/imagenes/do azul.png');
         }
+        .puntos-mensaje {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0;
+            transition: transform 1s ease-out, opacity 1s ease-out;
+            pointer-events: none;
+            z-index: 10;
+            margin-top: -80px;
+        }
+
+        .puntos-mensaje.positivo {
+            color: green;
+        }
+
+        .puntos-mensaje.negativo {
+            color: red;
+        }
+
     </style>
 </head>
 <body class="bg-blue-100 text-center">
@@ -172,9 +194,10 @@
                 <input type="hidden" id="cancionIdInput" name="cancion_id">
                 <input type="hidden" id="puntosObtenidosInput" name="puntos_obtenidos">
             </form>
-            <div class="pentagrama-container -mt-20">
+            <div class="pentagrama-container -mt-16">
                 <div class="pentagrama mx-auto"></div>
             </div>
+            <div id="puntosContainer" class="puntos-container"></div>
             <div class="piano-container -mt-16">
                 <div class="piano">
                     <div class="key white" data-note="do"><span data-note="do">Do</span></div>
@@ -191,6 +214,7 @@
                     <div class="key white" data-note="si"><span data-note="si">Si</span></div>
                 </div>
             </div>
+            
         </div>
     </section>
     <script>
@@ -247,44 +271,80 @@
                     });
                 }
     
-                function checkNotePlayed(note) {
-                    if (!isSongStarted) return;
-                    console.log(`Checking note played: ${note}`);
-                    if (note === notesSequence[currentNoteIndex]) {
-                        currentNoteIndex++;
-                        if (currentNoteIndex < notesSequence.length) {
-                            updateNotesOnStaff();
-                            highlightNoteOnStaff(currentNoteIndex);
-                        } else {
-                            setTimeout(() => {
-                                const audio = new Audio('/static/efectos-sonido/Ganaste.wav');
-                                    audio.play().then(() => {
-                                    }).catch(error => {
-                                        console.error('Error al reproducir musica', error);
-                                    });
-                                Swal.fire({
-                                    title: '¡Felicidades!',
-                                    text: `Has completado la canción con ${puntaje} puntos.`,
-                                    icon: 'success',
-                                    confirmButtonText: 'Aceptar'
-                                }).then(() => {
-                                    guardarPuntaje();
-                                    window.location.href = '/lista_canciones?reload=true';
-                                });
-                            }, 1000);
-                            isSongStarted = false;
-                        }
+                function mostrarPuntosMensaje(puntos, keyElement) {
+                const puntosContainer = document.getElementById('puntosContainer');
+                const puntosMensaje = document.createElement('div');
+                puntosMensaje.textContent = (puntos > 0 ? '+' : '') + puntos + ' puntos';
+                puntosMensaje.className = 'puntos-mensaje ' + (puntos > 0 ? 'positivo' : 'negativo');
+
+                // Posiciona el mensaje cerca del keyElement
+                const keyRect = keyElement.getBoundingClientRect();
+                const pianoRect = document.querySelector('.piano').getBoundingClientRect();
+                puntosMensaje.style.left = `${keyRect.left + keyRect.width / 2}px`;
+                puntosMensaje.style.top = `${pianoRect.top}px`;
+
+                puntosContainer.appendChild(puntosMensaje);
+
+                // Forzar un reflujo para que la transición funcione
+                puntosMensaje.getBoundingClientRect();
+
+                // Mueve y muestra el mensaje
+                puntosMensaje.style.opacity = 1;
+                puntosMensaje.style.transform = 'translateY(-50px)';
+
+                // Eliminar el mensaje después de la animación
+                setTimeout(() => {
+                    puntosMensaje.remove();
+                }, 1000); // El mensaje desaparecerá después de 1 segundo
+            }
+
+            function checkNotePlayed(note) {
+                if (!isSongStarted) return;
+                console.log(`Checking note played: ${note}`);
+                const keyElement = document.querySelector(`.key[data-note="${note}"]`);
+                if (note === notesSequence[currentNoteIndex]) {
+                    currentNoteIndex++;
+                    keyElement.classList.add('correct'); // Añade la clase para el color alegre
+                    mostrarPuntosMensaje(10, keyElement); // Muestra el mensaje de +10 puntos
+                    setTimeout(() => {
+                        keyElement.classList.remove('correct'); // Remueve la clase después de un tiempo
+                    }, 500); // Cambia el tiempo según sea necesario
+
+                    if (currentNoteIndex < notesSequence.length) {
+                        updateNotesOnStaff();
+                        highlightNoteOnStaff(currentNoteIndex);
                     } else {
-                        puntaje -= puntosPorError;
-                        document.getElementById('puntosObtenidosInput').value = puntaje; // Actualiza el valor del puntaje en el formulario
-                        playWrongSound(); // Reproduce el sonido de "perdiste"
-                        const keyElement = document.querySelector(`.key[data-note="${note}"]`);
-                        keyElement.classList.add('wrong');
                         setTimeout(() => {
-                            keyElement.classList.remove('wrong');
-                        }, 500);
+                            const audio = new Audio('/static/efectos-sonido/Ganaste.wav');
+                            audio.play().then(() => {
+                            }).catch(error => {
+                                console.error('Error al reproducir musica', error);
+                            });
+                            Swal.fire({
+                                title: '¡Felicidades!',
+                                text: `Has completado la canción con ${puntaje} puntos.`,
+                                icon: 'success',
+                                confirmButtonText: 'Aceptar'
+                            }).then(() => {
+                                guardarPuntaje();
+                                window.location.href = '/lista_canciones?reload=true';
+                            });
+                        }, 1000);
+                        isSongStarted = false;
                     }
+                } else {
+                    puntaje -= puntosPorError;
+                    document.getElementById('puntosObtenidosInput').value = puntaje;
+                    mostrarPuntosMensaje(-10, keyElement); 
+                    playWrongSound();
+                    keyElement.classList.add('wrong');
+                    setTimeout(() => {
+                        keyElement.classList.remove('wrong');
+                    }, 500);
                 }
+            }
+
+
     
                 function createNotesOnStaff() {
                     const pentagrama = document.querySelector('.pentagrama');

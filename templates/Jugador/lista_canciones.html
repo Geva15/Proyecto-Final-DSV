@@ -5,9 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Canciones - Music Kids</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .estrellita{
             height: 50px;
+        }
+        .reward-button {
+            color: white; /* Color del texto */
+            text-align: center; /* Alineación del texto */
+            text-decoration: none; /* Sin subrayado */
+            display: inline-block; /* Mostrar en línea con bloque */
+            font-size: 30px; /* Tamaño de la fuente */
+            margin: 4px 2px; /* Margen */
+            cursor: pointer; /* Cursor en forma de mano */
+            border-radius: 12px; /* Bordes redondeados */
+        }
+
+        .reward-button:hover {
+            background-color: #90dae1; /* Color de fondo en hover */
         }
     </style>
 </head>
@@ -32,11 +48,12 @@
                 <img src="/static/imagenes/icono_lista.png" class="h-12 w-10" alt="">
             </a>
         </div>
-        <img src="/static/imagenes/{{ imagen_barra }}" class="estrellita" alt="Barra de Progreso">
+        <img src="/static/imagenes/{{ imagen_barra }}" class="estrellita" alt="Barra de Progreso" id="barraProgreso">
         <div class="flex items-center">
             <div class="text-blue-500 font-bold text-lg mx-4">
                 <h2>{{ g.nombre }}</h2>
             </div>
+            <button id="rewardButton" class="reward-button">🎁</button>
             <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
                 {% if user_logged_in %}
                     <a href="/logout" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
@@ -49,7 +66,7 @@
             </a>
         </div>
     </header>
-    <section class="pt-20">
+    <section class="pt-20 mb-10">
         <h2 class="text-2xl font-bold mb-4 mt-4">Lista de Canciones</h2>
         <div class="container mx-auto px-4">
             {% for cancion in canciones %}
@@ -66,23 +83,51 @@
                     <img src="{{ cancion['foto'] }}" alt="" class="w-24 mx-4">
                     <li class="flex items-center flex-grow">
                         {% if cancion.desbloqueada %}
-                        <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="text-blue-500 hover:underline text-xl font-bold">{{ cancion['nombre_cancion'] }}</a>
+                        <a href="{{ url_for('cancion_facil', cancion_id=cancion['id_cancion']) }}" class="iniciar-cancion text-blue-500 hover:underline text-xl font-bold" data-id="{{ cancion['id_cancion'] }}" data-notas="{{ cancion['notas'] }}" data-nombre="{{ cancion['nombre_cancion'] }}">{{ cancion['nombre_cancion'] }}</a>
                         {% else %}
                         <span class="text-gray-500 text-xl font-bold">{{ cancion['nombre_cancion'] }}</span>
                         {% endif %}
                     </li>
                     <!-- Mostrar el puntaje máximo en la esquina derecha -->
                     <div class="absolute right-4 top-4 bg-yellow-300 p-2 rounded-lg">
-                        <span class="text-lg font-semibold">Puntaje: {{ cancion['puntaje_maximo'] }}</span>
+                        <span class="text-lg font-semibold">Puntaje máximo: {{ cancion['puntaje_maximo'] }}</span>
                     </div>
                 </ul>
             </div>
             {% endfor %}
-
-
+        </div>
     </section>
     
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const barraProgreso = document.getElementById('barraProgreso');
+            const rewardButton = document.getElementById('rewardButton');
+            console.log(barraProgreso)
+            // Verificar si la imagen de la barra de progreso es "barrita tercera estrella.png"
+            if (barraProgreso.src.includes('/static/imagenes/barrita%20tercera%20estrella.png')) {
+                rewardButton.style.display = 'inline-block'; // Mostrar el botón
+            } else {
+                rewardButton.style.display = 'none'; // Ocultar el botón
+            }
+
+            // Manejo del botón de recompensa
+            rewardButton.addEventListener('click', () => {
+                Swal.fire({
+                    title: '¡Has completado el juego!',
+                    html: `
+                        <p>¡Felicidades! Has desbloqueado una recompensa. Gran trabajo.</p>
+                        <div style="display: flex; justify-content: center;">
+                            <video width="320" height="240" controls autoplay loop>
+                                <source src="/static/imagenes/animacion.mp4" type="video/mp4">
+                                Tu navegador no soporta la reproducción de video.
+                            </video>
+                        </div>
+                    `,
+                    confirmButtonText: 'Aceptar'
+                });
+            });
+        });
+
         document.querySelectorAll('.iniciar-cancion').forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
@@ -95,10 +140,11 @@
                 window.location.href = button.getAttribute('href');
             });
         });
+
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('reload')) {
-                window.location.href = window.location.pathname; // Recarga la página sin parámetros
+                window.location.href = window.location.pathname;
             }
         });
     </script>

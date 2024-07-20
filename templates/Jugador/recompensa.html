@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Kids - Recompensa</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .estrellita {
+            height: 50px;
+        }
+        .progress-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f3f3f3;
+            border-bottom: 1px solid #ccc;
+        }
+        .progress-bar {
+            display: flex;
+            align-items: center;
+        }
+        .star {
+            width: 20px;
+            height: 20px;
+            background-color: #ccc;
+            margin-right: 5px;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+        .star.active {
+            background-color: gold;
+        }
+        .reward-indicator {
+            cursor: pointer;
+            background-color: #ffcc00;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup.hidden {
+            display: none;
+        }
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body class="bg-blue-100 text-center">
+    <header class="bg-white shadow-md p-4 flex items-center justify-between fixed z-10 w-full">
+        <div class="flex items-center">
+            <img src="/static/imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
+            <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
+            <a href="/user_home" class="ml-10 mr-2">
+                <img src="/static/imagenes/inicio.png" class="h-12 w-12" alt="">
+            </a>
+            <a href="" class="mx-2">
+                <img src="/static/imagenes/icono_tutorial.png" class="h-12 w-10" alt="">
+            </a>
+            <a href="/teoria" class="mx-2">
+                <img src="/static/imagenes/icono_teoria.png" class="h-12 w-16" alt="">
+            </a>
+            <a href="/piano" class="mx-2">
+                <img src="/static/imagenes/icono_piano.png" class="h-12 w-16" alt="">
+            </a>
+            <a href="/lista_canciones" class="mx-2">
+                <img src="/static/imagenes/icono_lista.png" class="h-12 w-10" alt="">
+            </a>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="star active"></div>
+                <div class="star active"></div>
+                <div class="star active"></div>
+            </div>
+            <div class="reward-indicator" onclick="showRewardPopup()">🎁 Recompensa disponible</div>
+        </div>
+        <div class="flex items-center">
+            <div class="text-blue-500 font-bold text-lg mx-4">
+                <h2>{{ g.nombre }}</h2>
+            </div>
+            <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
+                {% if user_logged_in %}
+                    <a href="/logout" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
+                        Cerrar Sesión
+                    </a>
+                {% endif %}
+            </div>
+            <a href="/soporte">
+                <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">
+            </a>
+        </div>
+    </header>
+    <section class="bg-blue-100 text-center mt-24">
+        <div class="content">
+            <h1 class="text-2xl font-bold">Pantalla Principal</h1>
+            <p>Contenido principal de la aplicación.</p>
+        </div>
+    </section>
+
+    <!-- Popup de recompensa -->
+    <div id="reward-popup" class="popup hidden">
+        <div class="popup-content">
+            <span class="close" onclick="hideRewardPopup()">&times;</span>
+            <h2>¡Felicidades!</h2>
+            <p>Has alcanzado el puntaje máximo. Puedes reclamar tu recompensa.</p>
+            <button onclick="claimReward()" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300 mt-2">Reclamar Recompensa</button>
+        </div>
+    </div>
+
+    <script>
+        function showRewardPopup() {
+            document.getElementById('reward-popup').classList.remove('hidden');
+        }
+
+        function hideRewardPopup() {
+            document.getElementById('reward-popup').classList.add('hidden');
+        }
+
+        function claimReward() {
+            Swal.fire({
+                title: 'Recompensa Reclamada',
+                text: '¡Has reclamado tu recompensa con éxito!',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                hideRewardPopup();
+                // Aquí puedes añadir lógica para marcar la recompensa como reclamada y actualizar la interfaz de usuario
+            });
+        }
+    </script>
+</body>
+</html>

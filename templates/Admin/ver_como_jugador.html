@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Kids</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .estrellita{
+            height: 50px;
+        }
+    </style>
+</head>
+<body class="bg-blue-100 text-center">
+    <header class="bg-white shadow-md p-4 flex items-center justify-between">
+        <div class="flex items-center">
+            <img src="/static/imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
+            <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
+        </div>
+        <div class="flex items-center">
+            <div class="text-blue-500 font-bold text-lg mx-4">
+                <h2>{{ g.nombre }}</h2>
+            </div>
+            
+            <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
+                <a href="{{ url_for('admin_logout') }}" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
+                    Cerrar Sesión
+                </a>
+            </div>
+            
+            
+            <a href="/soporte">
+                <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">
+            </a>
+        </div>
+    </header>
+    <div class="mx-auto flex flex-wrap justify-center"></div>
+    <h1 class="text-4xl text-orange-500 mt-10">Música para Niños</h1>
+    <div class="container mx-auto flex flex-wrap justify-center mt-10">
+        <div class="m-4">
+            <a href="#">
+                <img src="/static/imagenes/teoria_notas.jpeg" alt="teoria" class="w-64 h-64 object-cover rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <h2 class="text-lg text-gray-700 mt-2 font-bold font-serif">Tutorial de juego</h2>
+            </a>
+        </div>
+        <div class="m-4">
+            <a href="{{ url_for('teoria_notas_admin') }}">
+                <img src="/static/imagenes/tutorial.jpeg" alt="Tutorial" class="w-64 h-64 object-cover rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+            </a>
+            <h2 class="text-lg text-gray-700 mt-2 font-bold font-serif">Conoce las notas</h2>
+        </div>
+        <div class="m-4">
+            <a href="{{ url_for('piano_admin') }}">
+                <img src="/static/imagenes/piano.jpeg" alt="Piano" class="w-64 h-64 object-cover rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <h2 class="text-lg text-gray-700 mt-2 font-bold font-serif">Piano</h2>
+            </a>
+        </div>        
+        
+        <div class="m-4">
+            <a href="{{ url_for('lista_canciones_admin') }}">
+                <img src="/static/imagenes/lista.jpeg" alt="Imagen 4" class="w-64 h-64 object-cover rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <h2 class="text-lg text-gray-700 mt-2 font-bold font-serif">Lista de canciones</h2>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

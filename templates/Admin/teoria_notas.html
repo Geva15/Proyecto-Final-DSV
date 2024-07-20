@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pentagrama - Music Kids</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .pentagrama {
+            position: relative;
+            width: 70%;
+            height: 250px;
+            margin: 50px auto;
+            background: linear-gradient(to bottom, black 2px, transparent 2px) 0 0,
+                        linear-gradient(to bottom, black 2px, transparent 2px) 0 25%,
+                        linear-gradient(to bottom, black 2px, transparent 2px) 0 50%,
+                        linear-gradient(to bottom, black 2px, transparent 2px) 0 75%,
+                        linear-gradient(to bottom, black 2px, transparent 2px) 0 100%;
+            background-size: 100% 50px;
+        }
+        .clave {
+            position: absolute;
+            height: 400px;
+            width: 350px;
+            bottom: -55px; left: -8%;
+        }
+        .nota {
+            position: absolute;
+            height: 70px;
+            width: 85px;
+            cursor: pointer;
+        }
+        .do { bottom: -30px; left: 20%; }
+        .re { bottom: -8px; left: 32%; }
+        .mi { bottom: 12px; left: 44%; }
+        .fa { bottom: 36px; left: 56%; }
+        .sol { bottom: 62px; left: 68%; }
+        .la { bottom: 86px; left: 80%; }
+        .si { bottom: 112px; left: 92%; }
+        .nota-nombre {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid black;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body class="bg-blue-100 text-center">
+    <header class="bg-white shadow-md p-4 flex items-center justify-between fixed z-10 w-full">
+        <div class="flex items-center">
+            <img src="/static/imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
+            <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
+            <a href="{{ url_for('home_admin_vista_usuario') }}" class="ml-10 mr-2">
+                <img src="/static/imagenes/inicio.png" class="h-12 w-12" alt="">
+            </a>
+            <a href="" class="mx-2">
+                <img src="/static/imagenes/icono_tutorial.png" class="h-12 w-10" alt="">
+            </a>
+            <a href="{{ url_for('teoria_notas_admin') }}"class="mx-2">
+                <img src="/static/imagenes/icono_teoria.png" class="h-12 w-16" alt="">
+            </a>
+            <a href="{{ url_for('piano_admin') }}" class="mx-2">
+                <img src="/static/imagenes/icono_piano.png" class="h-12 w-16" alt="">
+            </a>
+            <a href="{{ url_for('lista_canciones_admin') }}"class="mx-2">
+                <img src="/static/imagenes/icono_lista.png" class="h-12 w-10" alt="">
+            </a>
+            
+        </div>
+        <div class="flex items-center">
+            <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
+                <a href="{{ url_for('home_admin') }}" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-end">
+                    Administrar página
+                </a>
+            </div>
+            <a href="soporte.html">
+                <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">
+            </a>
+        </div>
+    </header>
+    <div class="fixed top-32 w-full z-0">
+        <h2 class="text-4xl text-orange-500 mb-10">Pentagrama con Notas Musicales</h2>
+        <div class="pentagrama mx-auto top-8">
+            <img src="/static/imagenes/claveSol.png" alt="Clave sol" class="clave">
+            <img src="/static/imagenes/do.png" alt="Do" class="nota do" data-nombre="Do" data-sonido="do.wav">
+            <img src="/static/imagenes/re.png" alt="Re" class="nota re" data-nombre="Re" data-sonido="re.wav">
+            <img src="/static/imagenes/mi.png" alt="Mi" class="nota mi" data-nombre="Mi" data-sonido="mi.wav">
+            <img src="/static/imagenes/fa.png" alt="Fa" class="nota fa" data-nombre="Fa" data-sonido="fa.wav">
+            <img src="/static/imagenes/sol.png" alt="Sol" class="nota sol" data-nombre="Sol" data-sonido="sol.wav">
+            <img src="/static/imagenes/la.png" alt="La" class="nota la" data-nombre="La" data-sonido="la.wav">
+            <img src="/static/imagenes/si.png" alt="Si" class="nota si" data-nombre="Si" data-sonido="si.wav">
+            <div id="nota-nombre" class="nota-nombre"></div>
+        </div>
+    </div>
+    <script>
+        document.querySelectorAll('.nota').forEach(function(nota) {
+            nota.addEventListener('click', function() {
+                var notaNombre = nota.getAttribute('data-nombre');
+                var notaSonido = nota.getAttribute('data-sonido');
+                var notaNombreDiv = document.getElementById('nota-nombre');
+                
+                notaNombreDiv.textContent = notaNombre;
+                notaNombreDiv.style.display = 'block';
+                notaNombreDiv.style.left = nota.offsetLeft + 'px';
+                notaNombreDiv.style.top = nota.offsetTop - 40 + 'px';
+                
+                var audio = new Audio('/static/notas/' + notaSonido);
+                audio.play();
+                
+                setTimeout(function() {
+                    notaNombreDiv.style.display = 'none';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

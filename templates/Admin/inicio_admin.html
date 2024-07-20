@@ -13,24 +13,26 @@
             <img src="/static//imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
             <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
         </div>
-        <button id="switchMode" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">Ver como Jugador</button>
-    </header>
+        <button onclick="location.href='{{ url_for('ver_como_jugador') }}'" id="switchMode" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">
+            Ver como Jugador
+        </button>
+            </header>
     <h1 class="text-4xl text-orange-500 mt-10">Administrar Página</h1>
     <div class="container mx-auto flex flex-wrap justify-center mt-10">
         <div class="m-4">
-            <a href="jugadores.html">
+            <a href="/jugadores">
                 <img src="/static//imagenes/usuarios.png" alt="Imagen 2" class="w-64 h-64 object-cover rounded-xl shadow-lg hover:shadow-xl transition duration-300">
                 <h2 class="text-lg text-gray-700 mt-2 font-bold font-serif">Jugadores</h2>
             </a>
         </div>
         <div class="m-4">
-            <a href="administrativos.html">
+            <a href="/administrativos">
                 <img src="/static//imagenes/admin.png" alt="Imagen 2" class="w-64 h-64 object-cover rounded-xl shadow-lg hover:shadow-xl transition duration-300">
                 <h2 class="text-lg text-gray-700 mt-2 font-bold font-serif">Administrativos</h2>
             </a>
         </div>
         <div class="m-4">
-            <a href="lista_canciones.html">
+            <a href="/canciones_admin">
                 <img src="/static//imagenes/canciones.png" alt="Imagen 2" class="w-64 h-64 object-cover rounded-xl shadow-lg hover:shadow-xl transition duration-300">
                 <h2 class="text-lg text-gray-700 mt-2 font-bold font-serif">Lista de canciones</h2>
             </a>
