@@ -94,6 +94,16 @@ def user_home():
     cur.close()
     return render_template('/Jugador/inicio.html', imagen_barra=imagen_barra, user_logged_in=user_logged_in)
 
+@app.route('/admin_home')#Ruta que lleva a la página de Admin
+def admin_home():
+    if 'username' in session and session.get('role') == 'admin':
+        admin_logged_in = True
+    else:
+        admin_logged_in = False
+        flash('Acceso no autorizado.', 'error')
+        return redirect(url_for('login'))
+
+    return render_template('/Admin/inicio_admin.html', admin_logged_in=admin_logged_in)
 
 def obtener_imagen_barra_y_puntos(nombre_usuario, db_cursor):
     # Obtener puntos totales del usuario
