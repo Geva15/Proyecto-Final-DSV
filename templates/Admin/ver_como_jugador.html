@@ -21,15 +21,16 @@
             <div class="text-blue-500 font-bold text-lg mx-4">
                 <h2>{{ g.nombre }}</h2>
             </div>
-            
+            <button onclick="location.href='{{ url_for('home_admin') }}'" id="switchMode" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">
+                Administrar
+            </button>
             <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
                 <a href="{{ url_for('admin_logout') }}" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
                     Cerrar Sesión
                 </a>
             </div>
             
-            
-            <a href="/soporte">
+            <a href="/soporte_admin">
                 <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">
             </a>
         </div>

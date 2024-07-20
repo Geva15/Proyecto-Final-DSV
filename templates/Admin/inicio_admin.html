@@ -13,15 +13,22 @@
             <img src="/static//imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
             <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
         </div>
-<<<<<<< HEAD
-        <button onclick="location.href='{{ url_for('ver_como_jugador') }}'" id="switchMode" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">
-            Ver como Jugador
-        </button>
-            </header>
-=======
-        <button onclick="location.href={{ url_for('ver_como_jugador') }}'" id="switchMode" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">Ver como Jugador</button>
+        
+        <div class="flex items-center">
+            <div class="text-blue-500 font-bold text-lg mx-4">
+                <h2>{{ g.nombre }}</h2>
+            </div>
+            
+            <button onclick="location.href='{{ url_for('ver_como_jugador') }}'" id="switchMode" class="bg-yellow-400 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">
+                Ver como Jugador
+            </button>
+            <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
+                <a href="{{ url_for('admin_logout') }}" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
+                    Cerrar Sesión
+                </a>
+            </div>
+        </div>
     </header>
->>>>>>> 41d2857d7777e898ccd76dd6298e4cee004766f7
     <h1 class="text-4xl text-orange-500 mt-10">Administrar Página</h1>
     <div class="container mx-auto flex flex-wrap justify-center mt-10">
         <div class="m-4">
@@ -43,6 +50,5 @@
             </a>
         </div>
     </div>
-    <script src="admin.js"></script>
 </body>
 </html>

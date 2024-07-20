@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte y Ayuda - Music Kids</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .estrellita{
+            height: 50px;
+        }
+    </style>
+</head>
+<body class="bg-blue-100 text-center">
+    <header class="bg-white shadow-md p-4 flex items-center justify-between fixed z-10 w-full">
+        <div class="flex items-center">
+            <img src="/static/imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
+            <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
+            <a href="{{ url_for('ver_como_jugador') }}" class="ml-10 mr-2">
+                <img src="/static/imagenes/inicio.png" class="h-12 w-12" alt="">
+            </a>
+            <a href="" class="mx-2">
+                <img src="/static/imagenes/icono_tutorial.png" class="h-12 w-10" alt="">
+            </a>
+            <a href="{{ url_for('teoria_notas_admin') }}" class="mx-2">
+                <img src="/static/imagenes/icono_teoria.png" class="h-12 w-16" alt="">
+            </a>
+            <a href="{{ url_for('piano_admin') }}" class="mx-2">
+                <img src="/static/imagenes/icono_piano.png" class="h-12 w-16" alt="">
+            </a>
+            <a href="{{ url_for('lista_canciones_admin') }}" class="mx-2">
+                <img src="/static/imagenes/icono_lista.png" class="h-12 w-10" alt="">
+            </a>
+        </div>
+        
+        <div class="flex items-center">
+            <div class="text-blue-500 font-bold text-lg mx-4">
+                <h2>{{ g.nombre }}</h2>
+            </div>
+            <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
+                <a href="{{ url_for('admin_logout') }}" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
+                    Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </header>
+    <div class="p-20">
+        <h1 class="text-4xl text-orange-500 mt-6 mb-10">Soporte y Ayuda</h1>
+        <div class="container mx-auto px-8">
+            <!-- Sección General -->
+            <section class="bg-white p-6 rounded-lg shadow-lg mb-10 text-left">
+                <h2 class="text-2xl text-gray-700 font-bold mb-4">Bienvenido a la sección de Soporte y Ayuda de Music Kids</h2>
+                <p class="text-lg text-gray-700 mb-4">
+                    Aquí encontrarás toda la información necesaria para sacar el máximo provecho de nuestra aplicación. Si tienes alguna pregunta o necesitas asistencia, por favor revisa las siguientes secciones o contacta con nosotros.
+                </p>
+                <p class="text-lg text-gray-700">
+                    Puedes contactarnos enviando un correo a <a href="mailto:soporte@musickids.com" class="text-blue-500">soporte@musickids.com</a>.
+                </p>
+            </section>
+
+            <!-- Tutorial del Juego -->
+            <section class="bg-white p-6 rounded-lg shadow-lg mb-10 text-left">
+                <h2 class="text-2xl text-gray-700 font-bold mb-4">Tutorial del Juego</h2>
+                <p class="text-lg text-gray-700 mb-4">
+                    En esta sección aprenderás cómo jugar y dominar los fundamentos del juego. Sigue las instrucciones paso a paso para familiarizarte con las mecánicas y empezar a disfrutar de Music Kids.
+                </p>
+                <img src="" alt="Tutorial del Juego" class="mx-auto mb-4 rounded-lg" style="width: 500px; height: 300px;">
+                <a href="" class="text-lg text-blue-500 hover:underline">Ir al tutorial del juego</a>
+            </section>
+
+            <!-- Conocer las Notas -->
+            <section class="bg-white p-6 rounded-lg shadow-lg mb-10 text-left">
+                <h2 class="text-2xl text-gray-700 font-bold mb-4">Conocer las Notas</h2>
+                <p class="text-lg text-gray-700 mb-4">
+                    Aprende todo sobre las notas musicales y cómo reconocerlas en el juego dando click con el cursor encima para ver el nombre y su sonido. Esta sección te ayudará a entender las bases musicales necesarias para progresar en Music Kids.
+                </p>
+                <img src="/static/imagenes/Pentagrama notas soporte.png" alt="Conocer las Notas" class="mx-auto mb-4 rounded-lg" style="width: 500px; height: 300px;">
+                <a href="{{ url_for('teoria_notas_admin') }}" class="text-lg text-blue-500 hover:underline">Ir a conocer las notas</a>
+            </section>
+
+            <!-- Funcionamiento del Teclado -->
+            <section class="bg-white p-6 rounded-lg shadow-lg mb-10 text-left">
+                <h2 class="text-2xl text-gray-700 font-bold mb-4">Funcionamiento del Teclado</h2>
+                <p class="text-lg text-gray-700 mb-4">
+                    Descubre cómo utilizar el teclado en el juego dando click en el cursor por encima para poder escuchar la notas del piano, te ayudará ver el nombre de las notas por encima de su respectiva tecla.
+                </p>
+                <img src="/static/imagenes/Piano libre soporte.png" alt="Funcionamiento del Teclado" class="mx-auto mb-4 rounded-lg" style="width: 500px; height: 300px;">
+                <a href="{{ url_for('piano_admin') }}" class="text-lg text-blue-500 hover:underline">Ir al funcionamiento del teclado</a>
+            </section>
+
+            <!-- Listas de Canciones -->
+            <section class="bg-white p-6 rounded-lg shadow-lg mb-10 text-left">
+                <h2 class="text-2xl text-gray-700 font-bold mb-4">Listas de Canciones</h2>
+                <p class="text-lg text-gray-700 mb-4">
+                    Explora nuestras listas de canciones, divididas por niveles de dificultad. Encuentra la canción perfecta para tu nivel y sigue practicando para mejorar.
+                </p>
+                <img src="/static/imagenes/lista_canciones soporte.jpg" alt="Listas de Canciones" class="mx-auto mb-4 rounded-lg" style="width: 700px; height: 300px;">
+                <p class="text-lg text-gray-700 mb-4">
+                    Dale click a iniciar canción para poder empezar y luego sigue las notas del pentagrama con el piano para poder escuchar una hermosa melodía. 
+                </p>
+                <img src="/static/imagenes/Cancion facil soporte.png" alt="Canción Fácil" class="mx-auto mb-4 rounded-lg" style="width: 500px; height: 300px;">
+                <a href="{{ url_for('lista_canciones_admin') }}" class="text-lg text-blue-500 hover:underline">Ir a las listas de canciones</a>
+            </section>
+            <section class="bg-white p-6 rounded-lg shadow-lg text-left">
+                <h2 class="text-2xl text-gray-700 font-bold mb-4">¿Cómo ganar?</h2>
+                <p class="text-lg text-gray-700 mb-4">
+                    Conoce las notas musicales y practica con el piano, cuando estés listo, toca las canciones de la lista.
+                </p>
+                <p class="text-lg text-gray-700 mb-4">
+                    Las canciones se irán desbloqueando a medida que completes los niveles anteriores.
+                </p>
+                <img src="/static/imagenes/complear_niveles.jpg" alt="Listas de Canciones" class="mx-auto mb-4 rounded-lg" style="width: 600px; height: 300px;">
+                
+                <p class="text-lg text-gray-700 mb-4">
+                    Sigue la seceuncia de las notas en el pentagrama. La nota que debes tocar tomará un color azul. ¡Cada nota vale 10 puntos!
+                </p>
+                <p class="text-lg text-gray-700 mb-4">
+                    Cuando te equivoques, se te restarán 10 puntos.
+                </p>
+                <img src="/static/imagenes/puntos_perdidos.jpg" alt="Listas de Canciones" class="mx-auto mb-4 rounded-lg" style="width: 600px; height: 300px;">
+                
+                <p class="text-lg text-gray-700 mb-4">
+                    Cuando toques la tecla correcta, se te sumarán 10 puntos.
+                </p>
+                <img src="/static/imagenes/puntos_ganados.jpg" alt="Listas de Canciones" class="mx-auto mb-4 rounded-lg" style="width: 600px; height: 300px;">
+                
+                <p class="text-lg text-gray-700 mb-4">
+                    Gana y desbloquea una recompensa secreta! Solo los más habilidosos podrán completar este reto 🎁...
+                </p>
+        
+            </section>
+        </div>
+    </div>
+</body>
+</html>
