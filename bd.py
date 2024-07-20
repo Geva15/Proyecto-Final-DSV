@@ -156,7 +156,7 @@ def soporte():
     cur = mysql.connection.cursor()
     imagen_barra = obtener_imagen_barra_y_puntos(g.nombre, cur)
     cur.close()
-    return render_template('/Jugador/soporte.html', imagen_barra, user_logged_in=user_logged_in)
+    return render_template('/Jugador/soporte.html', imagen_barra=imagen_barra, user_logged_in=user_logged_in)
 
 @app.route('/lista_canciones')
 def lista_canciones():
