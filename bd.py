@@ -38,6 +38,14 @@ def register():
             cur.close()
             return render_template('register.html')
         
+        cur.execute('SELECT id FROM Usuario WHERE correo = %s', (correo,))
+        correo_existente = cur.fetchone()
+        
+        if correo_existente:
+            flash(f'EL correo {correo} ya esta registrado. Por favor utilice otro correo.', 'error')
+            cur.close()
+            return render_template('register.html')
+        
         cur.execute('INSERT INTO Usuario (nombre, contraseña, correo) VALUES (%s, %s, %s)', (nombre, password, correo))
         mysql.connection.commit()
         cur.close()
@@ -73,7 +81,7 @@ def login():
         elif admin:
             # Iniciar sesión como administrador
             session['username'] = nombre
-            return redirect(url_for('home_admin', username=nombre))
+            return redirect(url_for('ver_como_jugador', username=nombre))
         else:
             # Mostrar un mensaje de error
             flash('Nombre de usuario o contraseña incorrectos', 'error')
@@ -157,6 +165,14 @@ def piano_libre():
     imagen_barra = obtener_imagen_barra_y_puntos(g.nombre, cur)
     cur.close()
     return render_template('/Jugador/piano_libre.html', imagen_barra=imagen_barra, user_logged_in=user_logged_in)
+
+@app.route('/tutorial')
+def tutorial():
+    user_logged_in = g.nombre is not None
+    cur = mysql.connection.cursor()
+    imagen_barra = obtener_imagen_barra_y_puntos(g.nombre, cur)
+    cur.close()
+    return render_template('/Jugador/tutorial.html', imagen_barra=imagen_barra, user_logged_in=user_logged_in)
 
 @app.route('/teoria')
 def teoria_notas():
@@ -285,6 +301,10 @@ def escala_():
 def soporte_():
     return render_template('soporte.html')
 
+@app.route('/tutorial_')
+def tutorial_():
+    return render_template('tutorial.html')
+
 @app.route('/lista_')
 def lista_():
     cur = mysql.connection.cursor()
@@ -312,21 +332,23 @@ def jugadores():
         if 'userIdUpdate' in request.form:
             # Manejar la actualización de un usuario
             user_id = request.form.get('userIdUpdate')
-            nombre_user = request.form.get('userNameUpdate')
-            contraseña_user = request.form.get('userPasswordUpdate')
+            nombre_user = request.form.get('userNameUpdate', '').strip() or None
+            contraseña_user = request.form.get('userPasswordUpdate', '').strip() or None
+            correo_user = request.form.get('userCorreoUpdate', '').strip() or None
 
             cur = mysql.connection.cursor()
-            cur.callproc('UpdateUser', [user_id, nombre_user, contraseña_user])
+            cur.callproc('UpdateUser', [user_id, nombre_user, contraseña_user, correo_user])
             mysql.connection.commit()
             cur.close()
             return redirect(url_for('jugadores'))
-
+        
         # Manejar la inserción de un nuevo jugador
         nombre_user = request.form.get('userName')
         contraseña_user = request.form.get('userPassword')
+        correo_user = request.form.get('userCorreo')
 
         cur = mysql.connection.cursor()
-        cur.callproc('InsertUser', [nombre_user, contraseña_user])
+        cur.callproc('InsertUser', [nombre_user, contraseña_user, correo_user])
         mysql.connection.commit()
         cur.close()
 
@@ -354,8 +376,8 @@ def administrativos():
         if 'adminIdUpdate' in request.form:
             # Manejar la actualización de un administrador
             admin_id = request.form.get('adminIdUpdate')
-            nombre_admin = request.form.get('adminNameUpdate')
-            contraseña_admin = request.form.get('adminPasswordUpdate')
+            nombre_admin = request.form.get('adminNameUpdate', '').strip() or None
+            contraseña_admin = request.form.get('adminPasswordUpdate', '').strip() or None
 
             cur = mysql.connection.cursor()
             cur.callproc('UpdateAdmin', [admin_id, nombre_admin, contraseña_admin])
@@ -462,6 +484,10 @@ def teoria_notas_admin():
 def piano_admin():
     return render_template('Admin/piano_libre.html')
 
+@app.route('/tutorial_admin')
+def tutorial_admin():
+    return render_template('/Admin/tutorial.html')
+
 @app.route('/lista_canciones_admin')
 def lista_canciones_admin():
     user_logged_in = g.nombre is not None
@@ -477,7 +503,6 @@ def lista_canciones_admin():
 def home_admin():
     user_logged_in = g.nombre is not None
     return render_template('Admin/inicio_admin.html', user_logged_in = user_logged_in)
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)

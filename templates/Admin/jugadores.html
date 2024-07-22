@@ -53,7 +53,8 @@
                         <tr>
                             <th class="py-2 px-4 border-r border-gray-400 text-gray-600 font-semibold">id</th>
                             <th class="py-2 px-4 border-r border-gray-400 text-gray-600 font-semibold">nombre</th>
-                            <th class="py-2 px-4 text-gray-600 font-semibold">contraseña</th>
+                            <th class="py-2 px-4 border-r border-gray-400 text-gray-600 font-semibold">contraseña</th>
+                            <th class="py-2 px-4 text-gray-600 font-semibold">correo</th>
                         </tr>
                     </thead>
                     <tbody id="userList">
@@ -61,7 +62,8 @@
                         <tr class="border-b border-gray-200">
                             <td class="border-b border-r border-gray-400 py-2 px-4">{{ user.id }}</td>
                             <td class="border-b border-r border-gray-400 py-2 px-4">{{ user.nombre }}</td>
-                            <td class="border-b border-gray-400 py-2 px-4">{{ user.contraseña }}</td>
+                            <td class="border-b border-r border-gray-400 py-2 px-4">{{ user.contraseña }}</td>
+                            <td class="border-b border-gray-400 py-2 px-4">{{ user.correo }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -82,6 +84,10 @@
                 <div class="mb-4">
                     <label for="userPassword" class="block text-left">Contraseña:</label>
                     <input id="userPassword" name="userPassword" class="w-full px-2 py-1 border rounded" required>
+                </div>
+                <div class="mb-4">
+                    <label for="userCorreo" class="block text-left">correo:</label>
+                    <input type="text" id="userCorreo" name="userCorreo" class="w-full px-2 py-1 border rounded" required>
                 </div>
                 <div class="flex justify-end">
                     <button type="button" id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2">Cancelar</button>
@@ -117,11 +123,15 @@
             </div>
             <div class="mb-4">
                 <label for="userNameUpdate" class="block text-left">Nuevo Nombre:</label>
-                <input type="text" id="userNameUpdate" name="userNameUpdate" class="w-full px-2 py-1 border rounded" required>
+                <input type="text" id="userNameUpdate" name="userNameUpdate" class="w-full px-2 py-1 border rounded">
             </div>
             <div class="mb-4">
                 <label for="userPasswordUpdate" class="block text-left">Nueva Contraseña:</label>
-                <input type="text" id="userPasswordUpdate" name="userPasswordUpdate" class="w-full px-2 py-1 border rounded" required>
+                <input type="text" id="userPasswordUpdate" name="userPasswordUpdate" class="w-full px-2 py-1 border rounded">
+            </div>
+            <div class="mb-4">
+                <label for="userCorreoUpdate" class="block text-left">Nuevo Correo:</label>
+                <input type="text" id="userCorreoUpdate" name="userCorreoUpdate" class="w-full px-2 py-1 border rounded">
             </div>
             <div class="flex justify-end">
                 <button type="button" id="cancelEditButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2">Cancelar</button>

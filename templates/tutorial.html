@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial de juego</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+</head>
+<body class="bg-blue-100 text-center">
+    <header class="bg-white shadow-md p-4 flex items-center justify-between">
+        <div class="flex items-center">
+            <img src="/static/imagenes/logo.jpeg" alt="Logo" class="h-12 w-12 mr-4 rounded-full">
+            <h1 class="text-3xl text-orange-500 font-bold">Music Kids</h1>
+            <a href="/home" class="ml-10 mr-2">
+                <img src="/static/imagenes/inicio.png" class="h-12 w-12" alt="">
+            </a>
+            <a href="/tutorial_" class="mx-2">
+                <img src="/static/imagenes/icono_tutorial.png" class="h-12 w-10" alt="">
+            </a>
+            <a href="/teoria_" class="mx-2">
+                <img src="/static/imagenes/icono_teoria.png" class="h-12 w-16" alt="">
+            </a>
+            <a href="/piano_" class="mx-2">
+                <img src="/static/imagenes/icono_piano.png" class="h-12 w-16" alt="">
+            </a>
+            <a href="/lista_" class="mx-2">
+                <img src="/static/imagenes/icono_lista.png" class="h-12 w-10" alt="">
+            </a>
+            
+        </div>
+        <div class="flex items-center">
+            <div class="bg-yellow-300 p-1 py-2 px-4 rounded-full mx-4">
+                <a href="/login" class="text-white font-bold hover:bg-orange-600 transition duration-300 block text-center">
+                    Iniciar Sesión
+                </a>
+            </div>
+            <a href="/soporte_">
+                <img src="/static/imagenes/ayuda.jpeg" alt="Ayuda" class="h-10 w-10 rounded-full">
+            </a>
+        </div>
+        
+    </header>
+    <h1 class="text-4xl text-orange-500 mt-10">Tutorial</h1>
+    <div class="flex justify-content m-10">
+        <video width="auto" height="auto" controls style="border: 5px solid rgba(93, 93, 216, 0.788); border-radius: 10px;">
+            <source src="/static/imagenes/tutorial.mp4" type="video/mp4">
+        </video>
+    </div>
+</body>
+</html>
